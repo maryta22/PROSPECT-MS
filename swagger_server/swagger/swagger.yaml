@@ -1,0 +1,417 @@
+openapi: 3.0.1
+info:
+  title: PROSPECTS-MS
+  description: API to manage prospects and prospections.
+  version: 1.0.0
+servers:
+- url: http://localhost:8081
+  description: Local server
+paths:
+  /prospects:
+    get:
+      tags:
+      - Prospects
+      summary: Retrieve all prospects
+      operationId: prospects_get
+      responses:
+        "200":
+          description: List of prospects with user data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProspectWithUser'
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.prospects_controller
+    post:
+      tags:
+      - Prospects
+      summary: Create a prospect and its associated user
+      operationId: prospects_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProspectRequest'
+        required: true
+      responses:
+        "201":
+          description: Prospect and user created successfully
+        "400":
+          description: Invalid input data
+      x-openapi-router-controller: swagger_server.controllers.prospects_controller
+  /prospects/{id}:
+    get:
+      tags:
+      - Prospects
+      summary: Retrieve a prospect by ID
+      operationId: prospects_id_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Prospect found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProspectWithUser'
+        "404":
+          description: Prospect not found
+      x-openapi-router-controller: swagger_server.controllers.prospects_controller
+    delete:
+      tags:
+      - Prospects
+      summary: Delete a prospect
+      operationId: prospects_id_delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Prospect successfully deleted
+        "404":
+          description: Prospect not found
+      x-openapi-router-controller: swagger_server.controllers.prospects_controller
+    patch:
+      tags:
+      - Prospects
+      summary: Partially update a prospect
+      operationId: prospects_id_patch
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProspectUpdate'
+        required: true
+      responses:
+        "200":
+          description: Prospect successfully updated
+        "400":
+          description: Invalid input data
+        "404":
+          description: Prospect not found
+      x-openapi-router-controller: swagger_server.controllers.prospects_controller
+  /prospections:
+    get:
+      tags:
+      - Prospections
+      summary: Retrieve all prospections
+      operationId: prospections_get
+      responses:
+        "200":
+          description: List of prospections
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Prospection'
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.prospections_controller
+    post:
+      tags:
+      - Prospections
+      summary: Create a prospection
+      operationId: prospections_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProspectionRequest'
+        required: true
+      responses:
+        "201":
+          description: Prospection created successfully
+        "400":
+          description: Invalid input data
+      x-openapi-router-controller: swagger_server.controllers.prospections_controller
+  /prospections/{id}:
+    get:
+      tags:
+      - Prospections
+      summary: Retrieve a prospection by ID
+      operationId: prospections_id_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Prospection found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prospection'
+        "404":
+          description: Prospection not found
+      x-openapi-router-controller: swagger_server.controllers.prospections_controller
+    delete:
+      tags:
+      - Prospections
+      summary: Delete a prospection
+      operationId: prospections_id_delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Prospection successfully deleted
+        "404":
+          description: Prospection not found
+      x-openapi-router-controller: swagger_server.controllers.prospections_controller
+    patch:
+      tags:
+      - Prospections
+      summary: Partially update a prospection
+      operationId: prospections_id_patch
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProspectionRequest'
+        required: true
+      responses:
+        "200":
+          description: Prospection successfully updated
+        "400":
+          description: Invalid input data
+        "404":
+          description: Prospection not found
+      x-openapi-router-controller: swagger_server.controllers.prospections_controller
+  /prospections/{id}/notes:
+    get:
+      tags:
+      - Prospections
+      summary: Retrieve notes for a specific prospection
+      operationId: prospections_id_notes_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: List of notes for the prospection
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Note'
+                x-content-type: application/json
+        "404":
+          description: Prospection not found or no notes available
+      x-openapi-router-controller: swagger_server.controllers.prospections_controller
+  /prospections/{id}/emails:
+    get:
+      tags:
+      - Prospections
+      summary: Retrieve emails for a specific prospection
+      operationId: prospections_id_emails_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: List of emails for the prospection
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Email'
+                x-content-type: application/json
+        "404":
+          description: Prospection not found or no emails available
+      x-openapi-router-controller: swagger_server.controllers.prospections_controller
+components:
+  schemas:
+    ProspectRequest:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        prospect:
+          $ref: '#/components/schemas/ProspectRequest_prospect'
+    ProspectUpdate:
+      type: object
+      properties:
+        id_number:
+          type: string
+        estado:
+          type: integer
+        fecha_modificacion:
+          type: string
+          format: date
+    ProspectWithUser:
+      type: object
+      properties:
+        id:
+          type: integer
+        id_number:
+          type: string
+        estado:
+          type: integer
+        fecha_creacion:
+          type: string
+          format: date
+        fecha_modificacion:
+          type: string
+          format: date
+        user:
+          $ref: '#/components/schemas/User'
+      example:
+        id_number: id_number
+        estado: 6
+        id: 0
+        fecha_creacion: 2000-01-23
+        fecha_modificacion: 2000-01-23
+        user:
+          apellidos: apellidos
+          correo: correo
+          celular: celular
+          nombres: nombres
+    Prospection:
+      type: object
+      properties:
+        id:
+          type: integer
+        id_academic_program:
+          type: integer
+        id_prospect:
+          type: integer
+        fecha:
+          type: string
+          format: date
+        estado:
+          type: integer
+      example:
+        fecha: 2000-01-23
+        estado: 5
+        id_academic_program: 6
+        id: 0
+        id_prospect: 1
+    ProspectionRequest:
+      type: object
+      properties:
+        id_academic_program:
+          type: integer
+        id_prospect:
+          type: integer
+        fecha:
+          type: string
+          format: date
+        estado:
+          type: integer
+    Note:
+      type: object
+      properties:
+        id:
+          type: integer
+        id_prospection:
+          type: integer
+        mensaje:
+          type: string
+        fecha:
+          type: string
+          format: date
+      example:
+        fecha: 2000-01-23
+        id: 0
+        mensaje: mensaje
+        id_prospection: 6
+    Email:
+      type: object
+      properties:
+        id:
+          type: integer
+        id_prospection:
+          type: integer
+        emisor:
+          type: string
+        mensaje:
+          type: string
+        fecha:
+          type: string
+          format: date
+      example:
+        fecha: 2000-01-23
+        id: 0
+        mensaje: mensaje
+        id_prospection: 6
+        emisor: emisor
+    User:
+      type: object
+      properties:
+        nombres:
+          type: string
+        apellidos:
+          type: string
+        correo:
+          type: string
+        celular:
+          type: string
+      example:
+        apellidos: apellidos
+        correo: correo
+        celular: celular
+        nombres: nombres
+    ProspectRequest_prospect:
+      type: object
+      properties:
+        id_number:
+          type: string
+        estado:
+          type: integer
+        fecha_creacion:
+          type: string
+          format: date
+        fecha_modificacion:
+          type: string
+          format: date
+

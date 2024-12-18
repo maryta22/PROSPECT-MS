@@ -1,6 +1,7 @@
 import logging
 from flask import request, jsonify
 from swagger_server.models.prospect_request import  ProspectRequest # noqa: E501
+from ..models import ProspectUpdate
 from ..repositories.prospect_repository import ProspectRepository  # Import repository
 
 prospect_repository = ProspectRepository()
@@ -19,7 +20,7 @@ def prospects_id_patch(body, id_):  # noqa: E501
         try:
             raw_data = request.get_json()
             logging.info(f"Data received to update prospect: {raw_data}")
-            body = ProspectRequest.from_dict(raw_data)  # noqa: E501
+            body = ProspectUpdate.from_dict(raw_data)  # noqa: E501
             return prospect_repository.update_prospect(id_, body)
         except ValueError as ve:
             logging.error(f"Validation error: {ve}")

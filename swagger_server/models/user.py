@@ -14,35 +14,35 @@ class User(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, nombres: str=None, apellidos: str=None, correo: str=None, celular: str=None):  # noqa: E501
+    def __init__(self, first_name: str=None, last_name: str=None, email: str=None, phone: str=None):  # noqa: E501
         """User - a model defined in Swagger
 
-        :param nombres: The nombres of this User.  # noqa: E501
-        :type nombres: str
-        :param apellidos: The apellidos of this User.  # noqa: E501
-        :type apellidos: str
-        :param correo: The correo of this User.  # noqa: E501
-        :type correo: str
-        :param celular: The celular of this User.  # noqa: E501
-        :type celular: str
+        :param first_name: The first_name of this User.  # noqa: E501
+        :type first_name: str
+        :param last_name: The last_name of this User.  # noqa: E501
+        :type last_name: str
+        :param email: The email of this User.  # noqa: E501
+        :type email: str
+        :param phone: The phone of this User.  # noqa: E501
+        :type phone: str
         """
         self.swagger_types = {
-            'nombres': str,
-            'apellidos': str,
-            'correo': str,
-            'celular': str
+            'first_name': str,
+            'last_name': str,
+            'email': str,
+            'phone': str
         }
 
         self.attribute_map = {
-            'nombres': 'nombres',
-            'apellidos': 'apellidos',
-            'correo': 'correo',
-            'celular': 'celular'
+            'first_name': 'first_name',
+            'last_name': 'last_name',
+            'email': 'email',
+            'phone': 'phone'
         }
-        self._nombres = nombres
-        self._apellidos = apellidos
-        self._correo = correo
-        self._celular = celular
+        self._first_name = first_name
+        self._last_name = last_name
+        self._email = email
+        self._phone = phone
 
     @classmethod
     def from_dict(cls, dikt) -> 'User':
@@ -56,85 +56,85 @@ class User(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def nombres(self) -> str:
-        """Gets the nombres of this User.
+    def first_name(self) -> str:
+        """Gets the first_name of this User.
 
 
-        :return: The nombres of this User.
+        :return: The first_name of this User.
         :rtype: str
         """
-        return self._nombres
+        return self._first_name
 
-    @nombres.setter
-    def nombres(self, nombres: str):
-        """Sets the nombres of this User.
+    @first_name.setter
+    def first_name(self, first_name: str):
+        """Sets the first_name of this User.
 
 
-        :param nombres: The nombres of this User.
-        :type nombres: str
+        :param first_name: The first_name of this User.
+        :type first_name: str
         """
 
-        self._nombres = nombres
+        self._first_name = first_name
 
     @property
-    def apellidos(self) -> str:
-        """Gets the apellidos of this User.
+    def last_name(self) -> str:
+        """Gets the last_name of this User.
 
 
-        :return: The apellidos of this User.
+        :return: The last_name of this User.
         :rtype: str
         """
-        return self._apellidos
+        return self._last_name
 
-    @apellidos.setter
-    def apellidos(self, apellidos: str):
-        """Sets the apellidos of this User.
+    @last_name.setter
+    def last_name(self, last_name: str):
+        """Sets the last_name of this User.
 
 
-        :param apellidos: The apellidos of this User.
-        :type apellidos: str
+        :param last_name: The last_name of this User.
+        :type last_name: str
         """
 
-        self._apellidos = apellidos
+        self._last_name = last_name
 
     @property
-    def correo(self) -> str:
-        """Gets the correo of this User.
+    def email(self) -> str:
+        """Gets the email of this User.
 
 
-        :return: The correo of this User.
+        :return: The email of this User.
         :rtype: str
         """
-        return self._correo
+        return self._email
 
-    @correo.setter
-    def correo(self, correo: str):
-        """Sets the correo of this User.
+    @email.setter
+    def email(self, email: str):
+        """Sets the email of this User.
 
 
-        :param correo: The correo of this User.
-        :type correo: str
+        :param email: The email of this User.
+        :type email: str
         """
 
-        self._correo = correo
+        self._email = email
 
     @property
-    def celular(self) -> str:
-        """Gets the celular of this User.
+    def phone(self) -> str:
+        """Gets the phone of this User.
 
 
-        :return: The celular of this User.
+        :return: The phone of this User.
         :rtype: str
         """
-        return self._celular
+        return self._phone
 
-    @celular.setter
-    def celular(self, celular: str):
-        """Sets the celular of this User.
+    @phone.setter
+    def phone(self, phone: str):
+        """Sets the phone of this User.
 
 
-        :param celular: The celular of this User.
-        :type celular: str
+        :param phone: The phone of this User.
+        :type phone: str
         """
 
-        self._celular = celular
+        self._phone = phone

@@ -14,40 +14,40 @@ class Email(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: int=None, id_prospection: int=None, emisor: str=None, mensaje: str=None, fecha: date=None):  # noqa: E501
+    def __init__(self, id: int=None, prospection_id: int=None, sender: str=None, message: str=None, _date: date=None):  # noqa: E501
         """Email - a model defined in Swagger
 
         :param id: The id of this Email.  # noqa: E501
         :type id: int
-        :param id_prospection: The id_prospection of this Email.  # noqa: E501
-        :type id_prospection: int
-        :param emisor: The emisor of this Email.  # noqa: E501
-        :type emisor: str
-        :param mensaje: The mensaje of this Email.  # noqa: E501
-        :type mensaje: str
-        :param fecha: The fecha of this Email.  # noqa: E501
-        :type fecha: date
+        :param prospection_id: The prospection_id of this Email.  # noqa: E501
+        :type prospection_id: int
+        :param sender: The sender of this Email.  # noqa: E501
+        :type sender: str
+        :param message: The message of this Email.  # noqa: E501
+        :type message: str
+        :param _date: The _date of this Email.  # noqa: E501
+        :type _date: date
         """
         self.swagger_types = {
             'id': int,
-            'id_prospection': int,
-            'emisor': str,
-            'mensaje': str,
-            'fecha': date
+            'prospection_id': int,
+            'sender': str,
+            'message': str,
+            '_date': date
         }
 
         self.attribute_map = {
             'id': 'id',
-            'id_prospection': 'id_prospection',
-            'emisor': 'emisor',
-            'mensaje': 'mensaje',
-            'fecha': 'fecha'
+            'prospection_id': 'prospection_id',
+            'sender': 'sender',
+            'message': 'message',
+            '_date': 'date'
         }
         self._id = id
-        self._id_prospection = id_prospection
-        self._emisor = emisor
-        self._mensaje = mensaje
-        self._fecha = fecha
+        self._prospection_id = prospection_id
+        self._sender = sender
+        self._message = message
+        self.__date = _date
 
     @classmethod
     def from_dict(cls, dikt) -> 'Email':
@@ -82,85 +82,85 @@ class Email(Model):
         self._id = id
 
     @property
-    def id_prospection(self) -> int:
-        """Gets the id_prospection of this Email.
+    def prospection_id(self) -> int:
+        """Gets the prospection_id of this Email.
 
 
-        :return: The id_prospection of this Email.
+        :return: The prospection_id of this Email.
         :rtype: int
         """
-        return self._id_prospection
+        return self._prospection_id
 
-    @id_prospection.setter
-    def id_prospection(self, id_prospection: int):
-        """Sets the id_prospection of this Email.
+    @prospection_id.setter
+    def prospection_id(self, prospection_id: int):
+        """Sets the prospection_id of this Email.
 
 
-        :param id_prospection: The id_prospection of this Email.
-        :type id_prospection: int
+        :param prospection_id: The prospection_id of this Email.
+        :type prospection_id: int
         """
 
-        self._id_prospection = id_prospection
+        self._prospection_id = prospection_id
 
     @property
-    def emisor(self) -> str:
-        """Gets the emisor of this Email.
+    def sender(self) -> str:
+        """Gets the sender of this Email.
 
 
-        :return: The emisor of this Email.
+        :return: The sender of this Email.
         :rtype: str
         """
-        return self._emisor
+        return self._sender
 
-    @emisor.setter
-    def emisor(self, emisor: str):
-        """Sets the emisor of this Email.
+    @sender.setter
+    def sender(self, sender: str):
+        """Sets the sender of this Email.
 
 
-        :param emisor: The emisor of this Email.
-        :type emisor: str
+        :param sender: The sender of this Email.
+        :type sender: str
         """
 
-        self._emisor = emisor
+        self._sender = sender
 
     @property
-    def mensaje(self) -> str:
-        """Gets the mensaje of this Email.
+    def message(self) -> str:
+        """Gets the message of this Email.
 
 
-        :return: The mensaje of this Email.
+        :return: The message of this Email.
         :rtype: str
         """
-        return self._mensaje
+        return self._message
 
-    @mensaje.setter
-    def mensaje(self, mensaje: str):
-        """Sets the mensaje of this Email.
+    @message.setter
+    def message(self, message: str):
+        """Sets the message of this Email.
 
 
-        :param mensaje: The mensaje of this Email.
-        :type mensaje: str
+        :param message: The message of this Email.
+        :type message: str
         """
 
-        self._mensaje = mensaje
+        self._message = message
 
     @property
-    def fecha(self) -> date:
-        """Gets the fecha of this Email.
+    def _date(self) -> date:
+        """Gets the _date of this Email.
 
 
-        :return: The fecha of this Email.
+        :return: The _date of this Email.
         :rtype: date
         """
-        return self._fecha
+        return self.__date
 
-    @fecha.setter
-    def fecha(self, fecha: date):
-        """Sets the fecha of this Email.
+    @_date.setter
+    def _date(self, _date: date):
+        """Sets the _date of this Email.
 
 
-        :param fecha: The fecha of this Email.
-        :type fecha: date
+        :param _date: The _date of this Email.
+        :type _date: date
         """
 
-        self._fecha = fecha
+        self.__date = _date

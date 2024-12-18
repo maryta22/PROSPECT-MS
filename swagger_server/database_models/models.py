@@ -4,16 +4,112 @@ from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
-# Tabla Prospect
+# Table: StateProspection
+class StateProspection(Base):
+    __tablename__ = 'state_prospection'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    description = Column(String(50), nullable=False)
+    state = Column(Integer, nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "description": self.description,
+            "state": self.state
+        }
+
+# Table: User
+class User(Base):
+    __tablename__ = 'user'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    first_name = Column(String(50), nullable=False)
+    last_name = Column(String(50), nullable=False)
+    email = Column(String(100), unique=True, nullable=False)
+    phone = Column(String(10), nullable=False)
+
+    prospects = relationship("Prospect", back_populates="user")
+    sales_advisors = relationship("SalesAdvisor", back_populates="user")
+    administrators = relationship("Administrator", back_populates="user")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "phone": self.phone
+        }
+
+# Table: Administrator
+class Administrator(Base):
+    __tablename__ = 'administrator'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    id_user = Column(Integer, ForeignKey('user.id'), nullable=False)
+    state = Column(Integer, nullable=False)
+    creation_date = Column(Date, nullable=False)
+    modification_date = Column(Date, nullable=True)
+
+    user = relationship("User", back_populates="administrators")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "id_user": self.id_user,
+            "state": self.state,
+            "creation_date": self.creation_date.strftime('%Y-%m-%d'),
+            "modification_date": self.modification_date.strftime('%Y-%m-%d') if self.modification_date else None
+        }
+
+# Table: SalesAdvisor
+class SalesAdvisor(Base):
+    __tablename__ = 'sales_advisor'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    id_user = Column(Integer, ForeignKey('user.id'), nullable=False)
+    state = Column(Integer, nullable=False)
+
+    user = relationship("User", back_populates="sales_advisors")
+    prospections = relationship("ProspectionSalesAdvisor", back_populates="sales_advisor")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "id_user": self.id_user,
+            "state": self.state,
+            "user": self.user.to_dict() if self.user else None
+        }
+
+# Table: AcademicProgram
+class AcademicProgram(Base):
+    __tablename__ = 'academic_program'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False)
+    description = Column(String(500), nullable=False)
+    state = Column(Integer, nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "state": self.state
+        }
+
+# Table: Prospect
 class Prospect(Base):
     __tablename__ = 'prospect'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     id_user = Column(Integer, ForeignKey('user.id'), nullable=False)
-    cedula = Column(String(10), unique=True, nullable=False)
-    estado = Column(Integer, nullable=False)
-    fecha_creacion = Column(Date, nullable=False)
-    fecha_modificacion = Column(Date, nullable=True)
+    id_number = Column(String(10), unique=True, nullable=False)
+    state = Column(Integer, nullable=False)
+    creation_date = Column(Date, nullable=False)
+    modification_date = Column(Date, nullable=True)
+    company = Column(String(255), nullable=True)
 
     user = relationship("User", back_populates="prospects")
     prospections = relationship("Prospection", back_populates="prospect")
@@ -22,65 +118,71 @@ class Prospect(Base):
         return {
             "id": self.id,
             "id_user": self.id_user,
-            "cedula": self.cedula,
-            "estado": self.estado,
-            "fecha_creacion": self.fecha_creacion.strftime('%Y-%m-%d'),
-            "fecha_modificacion": self.fecha_modificacion.strftime('%Y-%m-%d') if self.fecha_modificacion else None,
+            "id_number": self.id_number,
+            "state": self.state,
+            "creation_date": self.creation_date,
+            "modification_date": self.modification_date,
+            "company": self.company,
             "user": self.user.to_dict() if self.user else None
         }
 
-# Tabla User
-class User(Base):
-    __tablename__ = 'user'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    nombres = Column(String(50), nullable=False)
-    apellidos = Column(String(50), nullable=False)
-    correo = Column(String(100), unique=True, nullable=False)
-    celular = Column(String(10), nullable=False)
-
-    prospects = relationship("Prospect", back_populates="user")
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "nombres": self.nombres,
-            "apellidos": self.apellidos,
-            "correo": self.correo,
-            "celular": self.celular
-        }
-
-# Tabla Prospection
+# Table: Prospection
 class Prospection(Base):
     __tablename__ = 'prospection'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    id_programa_academico = Column(Integer, nullable=False)
+    id_academic_program = Column(Integer, ForeignKey('academic_program.id'), nullable=False)
     id_prospect = Column(Integer, ForeignKey('prospect.id'), nullable=False)
-    estado = Column(Integer, nullable=False)
-    fecha = Column(Date, nullable=False)
+    date = Column(Date, nullable=False)
+    state = Column(Integer, nullable=False)
+    channel = Column(String(255), nullable=True)  # Agregamos la columna channel
 
     prospect = relationship("Prospect", back_populates="prospections")
+    academic_program = relationship("AcademicProgram")
     notes = relationship("Note", back_populates="prospection")
-    emails = relationship("Email", back_populates="prospection")
+    sales_advisors = relationship("ProspectionSalesAdvisor", back_populates="prospection")
+    emails = relationship("ProspectionEmail", back_populates="prospection")
 
     def to_dict(self):
         return {
             "id": self.id,
-            "id_programa_academico": self.id_programa_academico,
+            "id_academic_program": self.id_academic_program,
             "id_prospect": self.id_prospect,
-            "estado": self.estado,
-            "fecha": self.fecha.strftime('%Y-%m-%d')
+            "date": self.date.strftime('%Y-%m-%d') if self.date else None,
+            "state": self.state,
+            "channel": self.channel
         }
 
-# Tabla Note
+# Table: ProspectionSalesAdvisor
+class ProspectionSalesAdvisor(Base):
+    __tablename__ = 'prospection_sales_advisor'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    id_sales_advisor = Column(Integer, ForeignKey('sales_advisor.id'), nullable=False)
+    id_prospection = Column(Integer, ForeignKey('prospection.id'), nullable=False)
+    state = Column(Integer, nullable=False)
+    date = Column(Date, nullable=False)
+
+    sales_advisor = relationship("SalesAdvisor", back_populates="prospections")
+    prospection = relationship("Prospection", back_populates="sales_advisors")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "id_sales_advisor": self.id_sales_advisor,
+            "id_prospection": self.id_prospection,
+            "state": self.state,
+            "date": self.date.strftime('%Y-%m-%d') if self.date else None
+        }
+
+# Table: Note
 class Note(Base):
     __tablename__ = 'note'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     id_prospection = Column(Integer, ForeignKey('prospection.id'), nullable=False)
-    mensaje = Column(String(200), nullable=False)
-    fecha = Column(Date, nullable=False)
+    message = Column(String(200), nullable=False)
+    date = Column(Date, nullable=False)
 
     prospection = relationship("Prospection", back_populates="notes")
 
@@ -88,67 +190,65 @@ class Note(Base):
         return {
             "id": self.id,
             "id_prospection": self.id_prospection,
-            "mensaje": self.mensaje,
-            "fecha": self.fecha.strftime('%Y-%m-%d')
+            "message": self.message,
+            "date": self.date.strftime('%Y-%m-%d') if self.date else None
         }
 
-# Tabla Email
+# Table: EmailType
+class EmailType(Base):
+    __tablename__ = 'email_type'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(200), nullable=False)
+    description = Column(String(200), nullable=False)
+    state = Column(Integer, nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "state": self.state
+        }
+
+# Table: Email
 class Email(Base):
     __tablename__ = 'email'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    sender = Column(String(50), nullable=False)
+    message = Column(String(200), nullable=False)
+    date = Column(Date, nullable=False)
+    platform_id = Column(String(50), nullable=True)
+    id_email_type = Column(Integer, ForeignKey('email_type.id'), nullable=False)
+
+    email_type = relationship("EmailType")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "sender": self.sender,
+            "message": self.message,
+            "date": self.date.strftime('%Y-%m-%d') if self.date else None,
+            "platform_id": self.platform_id,
+            "email_type": self.email_type.to_dict() if self.email_type else None
+        }
+
+# Table: ProspectionEmail
+class ProspectionEmail(Base):
+    __tablename__ = 'prospection_email'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
     id_prospection = Column(Integer, ForeignKey('prospection.id'), nullable=False)
-    emisor = Column(String(50), nullable=False)
-    mensaje = Column(String(200), nullable=False)
-    fecha = Column(Date, nullable=False)
+    id_email = Column(Integer, ForeignKey('email.id'), nullable=False)
 
     prospection = relationship("Prospection", back_populates="emails")
+    email = relationship("Email")
 
     def to_dict(self):
         return {
             "id": self.id,
             "id_prospection": self.id_prospection,
-            "emisor": self.emisor,
-            "mensaje": self.mensaje,
-            "fecha": self.fecha.strftime('%Y-%m-%d')
-        }
-
-# Tabla SalesAdvisor
-class SalesAdvisor(Base):
-    __tablename__ = 'sales_advisor'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    nombres = Column(String(50), nullable=False)
-    apellidos = Column(String(50), nullable=False)
-    correo = Column(String(100), unique=True, nullable=False)
-    celular = Column(String(10), nullable=False)
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "nombres": self.nombres,
-            "apellidos": self.apellidos,
-            "correo": self.correo,
-            "celular": self.celular
-        }
-
-class ProspectionSalesAdvisor(Base):
-    __tablename__ = 'prospection_sales_advisor'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    id_prospection = Column(Integer, ForeignKey('prospection.id'), nullable=False)
-    id_sales_advisor = Column(Integer, ForeignKey('sales_advisor.id'), nullable=False)
-    date = Column(Date, nullable=False)
-    state = Column(Integer, nullable=False)
-
-    prospection = relationship("Prospection", back_populates="sales_advisor_relationship")
-    sales_advisor = relationship("SalesAdvisor", back_populates="prospections")
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "id_prospection": self.id_prospection,
-            "id_sales_advisor": self.id_sales_advisor,
-            "date": self.date.strftime('%Y-%m-%d') if self.date else None,
-            "state": self.state,
+            "id_email": self.id_email,
+            "email": self.email.to_dict() if self.email else None
         }

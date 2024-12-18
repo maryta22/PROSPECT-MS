@@ -14,35 +14,35 @@ class Note(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: int=None, id_prospection: int=None, mensaje: str=None, fecha: date=None):  # noqa: E501
+    def __init__(self, id: int=None, prospection_id: int=None, message: str=None, _date: date=None):  # noqa: E501
         """Note - a model defined in Swagger
 
         :param id: The id of this Note.  # noqa: E501
         :type id: int
-        :param id_prospection: The id_prospection of this Note.  # noqa: E501
-        :type id_prospection: int
-        :param mensaje: The mensaje of this Note.  # noqa: E501
-        :type mensaje: str
-        :param fecha: The fecha of this Note.  # noqa: E501
-        :type fecha: date
+        :param prospection_id: The prospection_id of this Note.  # noqa: E501
+        :type prospection_id: int
+        :param message: The message of this Note.  # noqa: E501
+        :type message: str
+        :param _date: The _date of this Note.  # noqa: E501
+        :type _date: date
         """
         self.swagger_types = {
             'id': int,
-            'id_prospection': int,
-            'mensaje': str,
-            'fecha': date
+            'prospection_id': int,
+            'message': str,
+            '_date': date
         }
 
         self.attribute_map = {
             'id': 'id',
-            'id_prospection': 'id_prospection',
-            'mensaje': 'mensaje',
-            'fecha': 'fecha'
+            'prospection_id': 'prospection_id',
+            'message': 'message',
+            '_date': 'date'
         }
         self._id = id
-        self._id_prospection = id_prospection
-        self._mensaje = mensaje
-        self._fecha = fecha
+        self._prospection_id = prospection_id
+        self._message = message
+        self.__date = _date
 
     @classmethod
     def from_dict(cls, dikt) -> 'Note':
@@ -77,64 +77,64 @@ class Note(Model):
         self._id = id
 
     @property
-    def id_prospection(self) -> int:
-        """Gets the id_prospection of this Note.
+    def prospection_id(self) -> int:
+        """Gets the prospection_id of this Note.
 
 
-        :return: The id_prospection of this Note.
+        :return: The prospection_id of this Note.
         :rtype: int
         """
-        return self._id_prospection
+        return self._prospection_id
 
-    @id_prospection.setter
-    def id_prospection(self, id_prospection: int):
-        """Sets the id_prospection of this Note.
+    @prospection_id.setter
+    def prospection_id(self, prospection_id: int):
+        """Sets the prospection_id of this Note.
 
 
-        :param id_prospection: The id_prospection of this Note.
-        :type id_prospection: int
+        :param prospection_id: The prospection_id of this Note.
+        :type prospection_id: int
         """
 
-        self._id_prospection = id_prospection
+        self._prospection_id = prospection_id
 
     @property
-    def mensaje(self) -> str:
-        """Gets the mensaje of this Note.
+    def message(self) -> str:
+        """Gets the message of this Note.
 
 
-        :return: The mensaje of this Note.
+        :return: The message of this Note.
         :rtype: str
         """
-        return self._mensaje
+        return self._message
 
-    @mensaje.setter
-    def mensaje(self, mensaje: str):
-        """Sets the mensaje of this Note.
+    @message.setter
+    def message(self, message: str):
+        """Sets the message of this Note.
 
 
-        :param mensaje: The mensaje of this Note.
-        :type mensaje: str
+        :param message: The message of this Note.
+        :type message: str
         """
 
-        self._mensaje = mensaje
+        self._message = message
 
     @property
-    def fecha(self) -> date:
-        """Gets the fecha of this Note.
+    def _date(self) -> date:
+        """Gets the _date of this Note.
 
 
-        :return: The fecha of this Note.
+        :return: The _date of this Note.
         :rtype: date
         """
-        return self._fecha
+        return self.__date
 
-    @fecha.setter
-    def fecha(self, fecha: date):
-        """Sets the fecha of this Note.
+    @_date.setter
+    def _date(self, _date: date):
+        """Sets the _date of this Note.
 
 
-        :param fecha: The fecha of this Note.
-        :type fecha: date
+        :param _date: The _date of this Note.
+        :type _date: date
         """
 
-        self._fecha = fecha
+        self.__date = _date

@@ -57,29 +57,48 @@ class ProspectRepository:
         finally:
             session.close()
 
-    def update_prospect(self, id, prospect_data):
+    def update_prospect(self, id_, prospect_data):
         session = self.Session()
         try:
-            prospect = session.query(Prospect).filter_by(id=id).first()
+            if hasattr(prospect_data, 'attribute_map'):
+                clean_data = {
+                    field_name: getattr(prospect_data, field_name, None)
+                    for field_name in prospect_data.attribute_map.values()
+                    if getattr(prospect_data, field_name, None) is not None
+                }
+            else:
+                clean_data = {k: v for k, v in prospect_data.__dict__.items() if v is not None}
+
+            prospect = session.query(Prospect).filter_by(id=id_).first()
             if not prospect:
                 return {"message": "Prospect not found"}, 404
 
-            for key, value in prospect_data.items():
-                setattr(prospect, key, value)
+            user = session.query(User).filter_by(id=prospect.id_user).first()
+            if not user:
+                return {"message": "User associated with the prospect not found"}, 404
+
+            if "state" in clean_data:
+                prospect.state = clean_data["state"]
+
+            user_fields = ["first_name", "last_name", "email", "phone"]
+            for field in user_fields:
+                if field in clean_data:
+                    setattr(user, field, clean_data[field])
 
             session.commit()
-            return {"message": "Prospect updated successfully."}, 200
+            return {"message": "Prospect and user updated successfully."}, 200
+
         except Exception as e:
             session.rollback()
-            logging.error(f"Error updating prospect: {e}")
-            return {"message": f"Error updating prospect: {str(e)}"}, 400
+            logging.error(f"Error updating prospect and user: {e}")
+            return {"message": f"Error updating prospect and user: {str(e)}"}, 400
         finally:
             session.close()
 
-    def delete_prospect_by_id(self, id):
+    def delete_prospect_by_id(self, id_):
         session = self.Session()
         try:
-            prospect = session.query(Prospect).filter_by(id=id).first()
+            prospect = session.query(Prospect).filter_by(id=id_).first()
             if not prospect:
                 return {"message": "Prospect not found"}, 404
 
@@ -148,5 +167,77 @@ class ProspectRepository:
         except Exception as e:
             logging.error(f"Error retrieving sales advisor: {e}")
             return {"message": f"Error retrieving sales advisor: {str(e)}"}, 500
+        finally:
+            session.close()
+
+    def update_prospection(self, id_, prospection_data):
+        session = self.Session()
+        try:
+            prospection = session.query(Prospection).filter_by(id=id_).first()
+            if not prospection:
+                return {"message": "Prospection not found"}, 404
+
+            for key, value in prospection_data.items():
+                if hasattr(prospection, key):
+                    setattr(prospection, key, value)
+
+            session.commit()
+            return {"message": "Prospection updated successfully."}, 200
+        except Exception as e:
+            session.rollback()
+            logging.error(f"Error updating prospection: {e}")
+            return {"message": f"Error updating prospection: {str(e)}"}, 400
+        finally:
+            session.close()
+
+    def get_prospects_by_sales_advisor_id(self, sales_advisor_id):
+        session = self.Session()
+        try:
+            prospections = session.query(Prospection).join(ProspectionSalesAdvisor).filter(
+                ProspectionSalesAdvisor.id_sales_advisor == sales_advisor_id
+            ).all()
+            if not prospections:
+                return {"message": "No prospects found for this sales advisor"}, 404
+
+            return [p.prospect.to_dict() for p in prospections], 200
+        except Exception as e:
+            logging.error(f"Error retrieving prospects for sales advisor: {e}")
+            return {"message": f"Error retrieving prospects: {str(e)}"}, 500
+        finally:
+            session.close()
+
+    def get_all_prospections(self):
+        session = self.Session()
+        try:
+            prospections = session.query(
+                Prospection.id.label("id"),
+                Prospect.id.label("prospect_id"),
+                Prospect.id_number.label("cedula"),
+                Prospect.company.label("company"),
+                Prospection.state.label("state"),
+                Prospection.date.label("date"),
+                AcademicProgram.name.label("program"),
+                Prospection.channel.label("channel")
+            ).join(Prospect, Prospection.id_prospect == Prospect.id
+                   ).join(AcademicProgram, Prospection.id_academic_program == AcademicProgram.id
+                          ).all()
+
+            result = [
+                {
+                    "id": row.id,
+                    "prospect_id": row.prospect_id,
+                    "cedula": row.cedula,
+                    "company": row.company,
+                    "state": row.state,
+                    "date": row.date.strftime('%Y-%m-%d') if row.date else None,
+                    "program": row.program,
+                    "channel": row.channel
+                }
+                for row in prospections
+            ]
+            return result, 200
+        except Exception as e:
+            logging.error(f"Error retrieving prospections for table: {e}")
+            return {"message": f"Error retrieving data: {str(e)}"}, 500
         finally:
             session.close()

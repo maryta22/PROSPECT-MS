@@ -14,35 +14,40 @@ class ProspectionRequest(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id_academic_program: int=None, id_prospect: int=None, fecha: date=None, estado: int=None):  # noqa: E501
+    def __init__(self, academic_program_id: int=None, prospect_id: int=None, _date: date=None, state: int=None, channel: str=None):  # noqa: E501
         """ProspectionRequest - a model defined in Swagger
 
-        :param id_academic_program: The id_academic_program of this ProspectionRequest.  # noqa: E501
-        :type id_academic_program: int
-        :param id_prospect: The id_prospect of this ProspectionRequest.  # noqa: E501
-        :type id_prospect: int
-        :param fecha: The fecha of this ProspectionRequest.  # noqa: E501
-        :type fecha: date
-        :param estado: The estado of this ProspectionRequest.  # noqa: E501
-        :type estado: int
+        :param academic_program_id: The academic_program_id of this ProspectionRequest.  # noqa: E501
+        :type academic_program_id: int
+        :param prospect_id: The prospect_id of this ProspectionRequest.  # noqa: E501
+        :type prospect_id: int
+        :param _date: The _date of this ProspectionRequest.  # noqa: E501
+        :type _date: date
+        :param state: The state of this ProspectionRequest.  # noqa: E501
+        :type state: int
+        :param channel: The channel of this ProspectionRequest.  # noqa: E501
+        :type channel: str
         """
         self.swagger_types = {
-            'id_academic_program': int,
-            'id_prospect': int,
-            'fecha': date,
-            'estado': int
+            'academic_program_id': int,
+            'prospect_id': int,
+            '_date': date,
+            'state': int,
+            'channel': str
         }
 
         self.attribute_map = {
-            'id_academic_program': 'id_academic_program',
-            'id_prospect': 'id_prospect',
-            'fecha': 'fecha',
-            'estado': 'estado'
+            'academic_program_id': 'academic_program_id',
+            'prospect_id': 'prospect_id',
+            '_date': 'date',
+            'state': 'state',
+            'channel': 'channel'
         }
-        self._id_academic_program = id_academic_program
-        self._id_prospect = id_prospect
-        self._fecha = fecha
-        self._estado = estado
+        self._academic_program_id = academic_program_id
+        self._prospect_id = prospect_id
+        self.__date = _date
+        self._state = state
+        self._channel = channel
 
     @classmethod
     def from_dict(cls, dikt) -> 'ProspectionRequest':
@@ -56,85 +61,108 @@ class ProspectionRequest(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def id_academic_program(self) -> int:
-        """Gets the id_academic_program of this ProspectionRequest.
+    def academic_program_id(self) -> int:
+        """Gets the academic_program_id of this ProspectionRequest.
 
 
-        :return: The id_academic_program of this ProspectionRequest.
+        :return: The academic_program_id of this ProspectionRequest.
         :rtype: int
         """
-        return self._id_academic_program
+        return self._academic_program_id
 
-    @id_academic_program.setter
-    def id_academic_program(self, id_academic_program: int):
-        """Sets the id_academic_program of this ProspectionRequest.
+    @academic_program_id.setter
+    def academic_program_id(self, academic_program_id: int):
+        """Sets the academic_program_id of this ProspectionRequest.
 
 
-        :param id_academic_program: The id_academic_program of this ProspectionRequest.
-        :type id_academic_program: int
+        :param academic_program_id: The academic_program_id of this ProspectionRequest.
+        :type academic_program_id: int
         """
 
-        self._id_academic_program = id_academic_program
+        self._academic_program_id = academic_program_id
 
     @property
-    def id_prospect(self) -> int:
-        """Gets the id_prospect of this ProspectionRequest.
+    def prospect_id(self) -> int:
+        """Gets the prospect_id of this ProspectionRequest.
 
 
-        :return: The id_prospect of this ProspectionRequest.
+        :return: The prospect_id of this ProspectionRequest.
         :rtype: int
         """
-        return self._id_prospect
+        return self._prospect_id
 
-    @id_prospect.setter
-    def id_prospect(self, id_prospect: int):
-        """Sets the id_prospect of this ProspectionRequest.
+    @prospect_id.setter
+    def prospect_id(self, prospect_id: int):
+        """Sets the prospect_id of this ProspectionRequest.
 
 
-        :param id_prospect: The id_prospect of this ProspectionRequest.
-        :type id_prospect: int
+        :param prospect_id: The prospect_id of this ProspectionRequest.
+        :type prospect_id: int
         """
 
-        self._id_prospect = id_prospect
+        self._prospect_id = prospect_id
 
     @property
-    def fecha(self) -> date:
-        """Gets the fecha of this ProspectionRequest.
+    def _date(self) -> date:
+        """Gets the _date of this ProspectionRequest.
 
 
-        :return: The fecha of this ProspectionRequest.
+        :return: The _date of this ProspectionRequest.
         :rtype: date
         """
-        return self._fecha
+        return self.__date
 
-    @fecha.setter
-    def fecha(self, fecha: date):
-        """Sets the fecha of this ProspectionRequest.
+    @_date.setter
+    def _date(self, _date: date):
+        """Sets the _date of this ProspectionRequest.
 
 
-        :param fecha: The fecha of this ProspectionRequest.
-        :type fecha: date
+        :param _date: The _date of this ProspectionRequest.
+        :type _date: date
         """
 
-        self._fecha = fecha
+        self.__date = _date
 
     @property
-    def estado(self) -> int:
-        """Gets the estado of this ProspectionRequest.
+    def state(self) -> int:
+        """Gets the state of this ProspectionRequest.
 
 
-        :return: The estado of this ProspectionRequest.
+        :return: The state of this ProspectionRequest.
         :rtype: int
         """
-        return self._estado
+        return self._state
 
-    @estado.setter
-    def estado(self, estado: int):
-        """Sets the estado of this ProspectionRequest.
+    @state.setter
+    def state(self, state: int):
+        """Sets the state of this ProspectionRequest.
 
 
-        :param estado: The estado of this ProspectionRequest.
-        :type estado: int
+        :param state: The state of this ProspectionRequest.
+        :type state: int
         """
 
-        self._estado = estado
+        self._state = state
+
+    @property
+    def channel(self) -> str:
+        """Gets the channel of this ProspectionRequest.
+
+        Channel used for the prospection  # noqa: E501
+
+        :return: The channel of this ProspectionRequest.
+        :rtype: str
+        """
+        return self._channel
+
+    @channel.setter
+    def channel(self, channel: str):
+        """Sets the channel of this ProspectionRequest.
+
+        Channel used for the prospection  # noqa: E501
+
+        :param channel: The channel of this ProspectionRequest.
+        :type channel: str
+        """
+
+        self._channel = channel

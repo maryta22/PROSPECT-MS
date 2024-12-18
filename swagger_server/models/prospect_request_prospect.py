@@ -14,35 +14,30 @@ class ProspectRequestProspect(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id_number: str=None, estado: int=None, fecha_creacion: date=None, fecha_modificacion: date=None):  # noqa: E501
+    def __init__(self, id_number: str=None, state: int=None, company: str=None):  # noqa: E501
         """ProspectRequestProspect - a model defined in Swagger
 
         :param id_number: The id_number of this ProspectRequestProspect.  # noqa: E501
         :type id_number: str
-        :param estado: The estado of this ProspectRequestProspect.  # noqa: E501
-        :type estado: int
-        :param fecha_creacion: The fecha_creacion of this ProspectRequestProspect.  # noqa: E501
-        :type fecha_creacion: date
-        :param fecha_modificacion: The fecha_modificacion of this ProspectRequestProspect.  # noqa: E501
-        :type fecha_modificacion: date
+        :param state: The state of this ProspectRequestProspect.  # noqa: E501
+        :type state: int
+        :param company: The company of this ProspectRequestProspect.  # noqa: E501
+        :type company: str
         """
         self.swagger_types = {
             'id_number': str,
-            'estado': int,
-            'fecha_creacion': date,
-            'fecha_modificacion': date
+            'state': int,
+            'company': str
         }
 
         self.attribute_map = {
             'id_number': 'id_number',
-            'estado': 'estado',
-            'fecha_creacion': 'fecha_creacion',
-            'fecha_modificacion': 'fecha_modificacion'
+            'state': 'state',
+            'company': 'company'
         }
         self._id_number = id_number
-        self._estado = estado
-        self._fecha_creacion = fecha_creacion
-        self._fecha_modificacion = fecha_modificacion
+        self._state = state
+        self._company = company
 
     @classmethod
     def from_dict(cls, dikt) -> 'ProspectRequestProspect':
@@ -77,64 +72,45 @@ class ProspectRequestProspect(Model):
         self._id_number = id_number
 
     @property
-    def estado(self) -> int:
-        """Gets the estado of this ProspectRequestProspect.
+    def state(self) -> int:
+        """Gets the state of this ProspectRequestProspect.
 
 
-        :return: The estado of this ProspectRequestProspect.
+        :return: The state of this ProspectRequestProspect.
         :rtype: int
         """
-        return self._estado
+        return self._state
 
-    @estado.setter
-    def estado(self, estado: int):
-        """Sets the estado of this ProspectRequestProspect.
+    @state.setter
+    def state(self, state: int):
+        """Sets the state of this ProspectRequestProspect.
 
 
-        :param estado: The estado of this ProspectRequestProspect.
-        :type estado: int
+        :param state: The state of this ProspectRequestProspect.
+        :type state: int
         """
 
-        self._estado = estado
+        self._state = state
 
     @property
-    def fecha_creacion(self) -> date:
-        """Gets the fecha_creacion of this ProspectRequestProspect.
+    def company(self) -> str:
+        """Gets the company of this ProspectRequestProspect.
 
+        Name of the company associated with the prospect  # noqa: E501
 
-        :return: The fecha_creacion of this ProspectRequestProspect.
-        :rtype: date
+        :return: The company of this ProspectRequestProspect.
+        :rtype: str
         """
-        return self._fecha_creacion
+        return self._company
 
-    @fecha_creacion.setter
-    def fecha_creacion(self, fecha_creacion: date):
-        """Sets the fecha_creacion of this ProspectRequestProspect.
+    @company.setter
+    def company(self, company: str):
+        """Sets the company of this ProspectRequestProspect.
 
+        Name of the company associated with the prospect  # noqa: E501
 
-        :param fecha_creacion: The fecha_creacion of this ProspectRequestProspect.
-        :type fecha_creacion: date
-        """
-
-        self._fecha_creacion = fecha_creacion
-
-    @property
-    def fecha_modificacion(self) -> date:
-        """Gets the fecha_modificacion of this ProspectRequestProspect.
-
-
-        :return: The fecha_modificacion of this ProspectRequestProspect.
-        :rtype: date
-        """
-        return self._fecha_modificacion
-
-    @fecha_modificacion.setter
-    def fecha_modificacion(self, fecha_modificacion: date):
-        """Sets the fecha_modificacion of this ProspectRequestProspect.
-
-
-        :param fecha_modificacion: The fecha_modificacion of this ProspectRequestProspect.
-        :type fecha_modificacion: date
+        :param company: The company of this ProspectRequestProspect.
+        :type company: str
         """
 
-        self._fecha_modificacion = fecha_modificacion
+        self._company = company

@@ -281,13 +281,25 @@ components:
     ProspectUpdate:
       type: object
       properties:
-        id_number:
-          type: string
-        estado:
+        state:
           type: integer
-        fecha_modificacion:
+        first_name:
           type: string
-          format: date
+        last_name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        company:
+          type: string
+          description: Name of the company associated with the prospect
+      example:
+        state: 2
+        first_name: Jane
+        last_name: Doe
+        email: jane.doe@example.com
+        phone: "9876543210"
     ProspectWithUser:
       type: object
       properties:
@@ -295,123 +307,139 @@ components:
           type: integer
         id_number:
           type: string
-        estado:
+        state:
           type: integer
-        fecha_creacion:
+        company:
           type: string
-          format: date
-        fecha_modificacion:
-          type: string
-          format: date
+          description: Name of the company associated with the prospect
         user:
           $ref: '#/components/schemas/User'
       example:
-        id_number: id_number
-        estado: 6
+        id_number: ID123456
+        state: 6
         id: 0
-        fecha_creacion: 2000-01-23
-        fecha_modificacion: 2000-01-23
         user:
-          apellidos: apellidos
-          correo: correo
-          celular: celular
-          nombres: nombres
+          last_name: Doe
+          email: john.doe@example.com
+          phone: "1234567890"
+          first_name: John
     Prospection:
       type: object
       properties:
         id:
           type: integer
-        id_academic_program:
+          description: ID of the prospection
+        prospect_id:
           type: integer
-        id_prospect:
-          type: integer
-        fecha:
+          description: ID of the associated prospect
+        cedula:
           type: string
-          format: date
-        estado:
+          description: Identification number of the prospect
+        company:
+          type: string
+          description: Company associated with the prospect
+        state:
           type: integer
+          description: State of the prospection
+        date:
+          type: string
+          description: Date of the prospection
+          format: date
+        program:
+          type: string
+          description: Name of the academic program
+        channel:
+          type: string
+          description: Channel used for the prospection
       example:
-        fecha: 2000-01-23
-        estado: 5
-        id_academic_program: 6
-        id: 0
-        id_prospect: 1
+        id: 1
+        prospect_id: 10
+        cedula: "1234567890"
+        company: Tech Corp
+        state: 1
+        date: 2024-01-01
+        program: MBA
+        channel: Social Media
     ProspectionRequest:
       type: object
       properties:
-        id_academic_program:
+        academic_program_id:
           type: integer
-        id_prospect:
+        prospect_id:
           type: integer
-        fecha:
+        date:
           type: string
           format: date
-        estado:
+        state:
           type: integer
+        channel:
+          type: string
+          description: Channel used for the prospection
     Note:
       type: object
       properties:
         id:
           type: integer
-        id_prospection:
+        prospection_id:
           type: integer
-        mensaje:
+        message:
           type: string
-        fecha:
+        date:
           type: string
           format: date
       example:
-        fecha: 2000-01-23
+        date: 2000-01-23
         id: 0
-        mensaje: mensaje
-        id_prospection: 6
+        message: Follow-up meeting scheduled
+        prospection_id: 6
     Email:
       type: object
       properties:
         id:
           type: integer
-        id_prospection:
+        prospection_id:
           type: integer
-        emisor:
+        sender:
           type: string
-        mensaje:
+        message:
           type: string
-        fecha:
+        date:
           type: string
           format: date
       example:
-        fecha: 2000-01-23
+        date: 2000-01-23
         id: 0
-        mensaje: mensaje
-        id_prospection: 6
-        emisor: emisor
+        message: Prospect email sent
+        prospection_id: 6
+        sender: no-reply@example.com
     User:
       type: object
       properties:
-        nombres:
+        first_name:
           type: string
-        apellidos:
+        last_name:
           type: string
-        correo:
+        email:
           type: string
-        celular:
+        phone:
           type: string
       example:
-        apellidos: apellidos
-        correo: correo
-        celular: celular
-        nombres: nombres
+        last_name: Doe
+        email: john.doe@example.com
+        phone: "1234567890"
+        first_name: John
     ProspectRequest_prospect:
       type: object
       properties:
         id_number:
           type: string
-        estado:
+        state:
           type: integer
-        fecha_creacion:
+        company:
           type: string
-          format: date
-        fecha_modificacion:
-          type: string
-          format: date
+          description: Name of the company associated with the prospect
+      example:
+        id_number: ID123456
+        state: 1
+        company: Tech Corp
 

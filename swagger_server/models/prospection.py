@@ -14,40 +14,55 @@ class Prospection(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: int=None, id_academic_program: int=None, id_prospect: int=None, fecha: date=None, estado: int=None):  # noqa: E501
+    def __init__(self, id: int=None, prospect_id: int=None, cedula: str=None, company: str=None, state: int=None, _date: date=None, program: str=None, channel: str=None):  # noqa: E501
         """Prospection - a model defined in Swagger
 
         :param id: The id of this Prospection.  # noqa: E501
         :type id: int
-        :param id_academic_program: The id_academic_program of this Prospection.  # noqa: E501
-        :type id_academic_program: int
-        :param id_prospect: The id_prospect of this Prospection.  # noqa: E501
-        :type id_prospect: int
-        :param fecha: The fecha of this Prospection.  # noqa: E501
-        :type fecha: date
-        :param estado: The estado of this Prospection.  # noqa: E501
-        :type estado: int
+        :param prospect_id: The prospect_id of this Prospection.  # noqa: E501
+        :type prospect_id: int
+        :param cedula: The cedula of this Prospection.  # noqa: E501
+        :type cedula: str
+        :param company: The company of this Prospection.  # noqa: E501
+        :type company: str
+        :param state: The state of this Prospection.  # noqa: E501
+        :type state: int
+        :param _date: The _date of this Prospection.  # noqa: E501
+        :type _date: date
+        :param program: The program of this Prospection.  # noqa: E501
+        :type program: str
+        :param channel: The channel of this Prospection.  # noqa: E501
+        :type channel: str
         """
         self.swagger_types = {
             'id': int,
-            'id_academic_program': int,
-            'id_prospect': int,
-            'fecha': date,
-            'estado': int
+            'prospect_id': int,
+            'cedula': str,
+            'company': str,
+            'state': int,
+            '_date': date,
+            'program': str,
+            'channel': str
         }
 
         self.attribute_map = {
             'id': 'id',
-            'id_academic_program': 'id_academic_program',
-            'id_prospect': 'id_prospect',
-            'fecha': 'fecha',
-            'estado': 'estado'
+            'prospect_id': 'prospect_id',
+            'cedula': 'cedula',
+            'company': 'company',
+            'state': 'state',
+            '_date': 'date',
+            'program': 'program',
+            'channel': 'channel'
         }
         self._id = id
-        self._id_academic_program = id_academic_program
-        self._id_prospect = id_prospect
-        self._fecha = fecha
-        self._estado = estado
+        self._prospect_id = prospect_id
+        self._cedula = cedula
+        self._company = company
+        self._state = state
+        self.__date = _date
+        self._program = program
+        self._channel = channel
 
     @classmethod
     def from_dict(cls, dikt) -> 'Prospection':
@@ -64,6 +79,7 @@ class Prospection(Model):
     def id(self) -> int:
         """Gets the id of this Prospection.
 
+        ID of the prospection  # noqa: E501
 
         :return: The id of this Prospection.
         :rtype: int
@@ -74,6 +90,7 @@ class Prospection(Model):
     def id(self, id: int):
         """Sets the id of this Prospection.
 
+        ID of the prospection  # noqa: E501
 
         :param id: The id of this Prospection.
         :type id: int
@@ -82,85 +99,162 @@ class Prospection(Model):
         self._id = id
 
     @property
-    def id_academic_program(self) -> int:
-        """Gets the id_academic_program of this Prospection.
+    def prospect_id(self) -> int:
+        """Gets the prospect_id of this Prospection.
 
+        ID of the associated prospect  # noqa: E501
 
-        :return: The id_academic_program of this Prospection.
+        :return: The prospect_id of this Prospection.
         :rtype: int
         """
-        return self._id_academic_program
+        return self._prospect_id
 
-    @id_academic_program.setter
-    def id_academic_program(self, id_academic_program: int):
-        """Sets the id_academic_program of this Prospection.
+    @prospect_id.setter
+    def prospect_id(self, prospect_id: int):
+        """Sets the prospect_id of this Prospection.
 
+        ID of the associated prospect  # noqa: E501
 
-        :param id_academic_program: The id_academic_program of this Prospection.
-        :type id_academic_program: int
+        :param prospect_id: The prospect_id of this Prospection.
+        :type prospect_id: int
         """
 
-        self._id_academic_program = id_academic_program
+        self._prospect_id = prospect_id
 
     @property
-    def id_prospect(self) -> int:
-        """Gets the id_prospect of this Prospection.
+    def cedula(self) -> str:
+        """Gets the cedula of this Prospection.
 
+        Identification number of the prospect  # noqa: E501
 
-        :return: The id_prospect of this Prospection.
+        :return: The cedula of this Prospection.
+        :rtype: str
+        """
+        return self._cedula
+
+    @cedula.setter
+    def cedula(self, cedula: str):
+        """Sets the cedula of this Prospection.
+
+        Identification number of the prospect  # noqa: E501
+
+        :param cedula: The cedula of this Prospection.
+        :type cedula: str
+        """
+
+        self._cedula = cedula
+
+    @property
+    def company(self) -> str:
+        """Gets the company of this Prospection.
+
+        Company associated with the prospect  # noqa: E501
+
+        :return: The company of this Prospection.
+        :rtype: str
+        """
+        return self._company
+
+    @company.setter
+    def company(self, company: str):
+        """Sets the company of this Prospection.
+
+        Company associated with the prospect  # noqa: E501
+
+        :param company: The company of this Prospection.
+        :type company: str
+        """
+
+        self._company = company
+
+    @property
+    def state(self) -> int:
+        """Gets the state of this Prospection.
+
+        State of the prospection  # noqa: E501
+
+        :return: The state of this Prospection.
         :rtype: int
         """
-        return self._id_prospect
+        return self._state
 
-    @id_prospect.setter
-    def id_prospect(self, id_prospect: int):
-        """Sets the id_prospect of this Prospection.
+    @state.setter
+    def state(self, state: int):
+        """Sets the state of this Prospection.
 
+        State of the prospection  # noqa: E501
 
-        :param id_prospect: The id_prospect of this Prospection.
-        :type id_prospect: int
+        :param state: The state of this Prospection.
+        :type state: int
         """
 
-        self._id_prospect = id_prospect
+        self._state = state
 
     @property
-    def fecha(self) -> date:
-        """Gets the fecha of this Prospection.
+    def _date(self) -> date:
+        """Gets the _date of this Prospection.
 
+        Date of the prospection  # noqa: E501
 
-        :return: The fecha of this Prospection.
+        :return: The _date of this Prospection.
         :rtype: date
         """
-        return self._fecha
+        return self.__date
 
-    @fecha.setter
-    def fecha(self, fecha: date):
-        """Sets the fecha of this Prospection.
+    @_date.setter
+    def _date(self, _date: date):
+        """Sets the _date of this Prospection.
 
+        Date of the prospection  # noqa: E501
 
-        :param fecha: The fecha of this Prospection.
-        :type fecha: date
+        :param _date: The _date of this Prospection.
+        :type _date: date
         """
 
-        self._fecha = fecha
+        self.__date = _date
 
     @property
-    def estado(self) -> int:
-        """Gets the estado of this Prospection.
+    def program(self) -> str:
+        """Gets the program of this Prospection.
 
+        Name of the academic program  # noqa: E501
 
-        :return: The estado of this Prospection.
-        :rtype: int
+        :return: The program of this Prospection.
+        :rtype: str
         """
-        return self._estado
+        return self._program
 
-    @estado.setter
-    def estado(self, estado: int):
-        """Sets the estado of this Prospection.
+    @program.setter
+    def program(self, program: str):
+        """Sets the program of this Prospection.
 
+        Name of the academic program  # noqa: E501
 
-        :param estado: The estado of this Prospection.
-        :type estado: int
+        :param program: The program of this Prospection.
+        :type program: str
         """
 
-        self._estado = estado
+        self._program = program
+
+    @property
+    def channel(self) -> str:
+        """Gets the channel of this Prospection.
+
+        Channel used for the prospection  # noqa: E501
+
+        :return: The channel of this Prospection.
+        :rtype: str
+        """
+        return self._channel
+
+    @channel.setter
+    def channel(self, channel: str):
+        """Sets the channel of this Prospection.
+
+        Channel used for the prospection  # noqa: E501
+
+        :param channel: The channel of this Prospection.
+        :type channel: str
+        """
+
+        self._channel = channel

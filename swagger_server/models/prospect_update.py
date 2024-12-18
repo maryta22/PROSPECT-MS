@@ -14,30 +14,45 @@ class ProspectUpdate(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id_number: str=None, estado: int=None, fecha_modificacion: date=None):  # noqa: E501
+    def __init__(self, state: int=None, first_name: str=None, last_name: str=None, email: str=None, phone: str=None, company: str=None):  # noqa: E501
         """ProspectUpdate - a model defined in Swagger
 
-        :param id_number: The id_number of this ProspectUpdate.  # noqa: E501
-        :type id_number: str
-        :param estado: The estado of this ProspectUpdate.  # noqa: E501
-        :type estado: int
-        :param fecha_modificacion: The fecha_modificacion of this ProspectUpdate.  # noqa: E501
-        :type fecha_modificacion: date
+        :param state: The state of this ProspectUpdate.  # noqa: E501
+        :type state: int
+        :param first_name: The first_name of this ProspectUpdate.  # noqa: E501
+        :type first_name: str
+        :param last_name: The last_name of this ProspectUpdate.  # noqa: E501
+        :type last_name: str
+        :param email: The email of this ProspectUpdate.  # noqa: E501
+        :type email: str
+        :param phone: The phone of this ProspectUpdate.  # noqa: E501
+        :type phone: str
+        :param company: The company of this ProspectUpdate.  # noqa: E501
+        :type company: str
         """
         self.swagger_types = {
-            'id_number': str,
-            'estado': int,
-            'fecha_modificacion': date
+            'state': int,
+            'first_name': str,
+            'last_name': str,
+            'email': str,
+            'phone': str,
+            'company': str
         }
 
         self.attribute_map = {
-            'id_number': 'id_number',
-            'estado': 'estado',
-            'fecha_modificacion': 'fecha_modificacion'
+            'state': 'state',
+            'first_name': 'first_name',
+            'last_name': 'last_name',
+            'email': 'email',
+            'phone': 'phone',
+            'company': 'company'
         }
-        self._id_number = id_number
-        self._estado = estado
-        self._fecha_modificacion = fecha_modificacion
+        self._state = state
+        self._first_name = first_name
+        self._last_name = last_name
+        self._email = email
+        self._phone = phone
+        self._company = company
 
     @classmethod
     def from_dict(cls, dikt) -> 'ProspectUpdate':
@@ -51,64 +66,129 @@ class ProspectUpdate(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def id_number(self) -> str:
-        """Gets the id_number of this ProspectUpdate.
+    def state(self) -> int:
+        """Gets the state of this ProspectUpdate.
 
 
-        :return: The id_number of this ProspectUpdate.
-        :rtype: str
-        """
-        return self._id_number
-
-    @id_number.setter
-    def id_number(self, id_number: str):
-        """Sets the id_number of this ProspectUpdate.
-
-
-        :param id_number: The id_number of this ProspectUpdate.
-        :type id_number: str
-        """
-
-        self._id_number = id_number
-
-    @property
-    def estado(self) -> int:
-        """Gets the estado of this ProspectUpdate.
-
-
-        :return: The estado of this ProspectUpdate.
+        :return: The state of this ProspectUpdate.
         :rtype: int
         """
-        return self._estado
+        return self._state
 
-    @estado.setter
-    def estado(self, estado: int):
-        """Sets the estado of this ProspectUpdate.
+    @state.setter
+    def state(self, state: int):
+        """Sets the state of this ProspectUpdate.
 
 
-        :param estado: The estado of this ProspectUpdate.
-        :type estado: int
+        :param state: The state of this ProspectUpdate.
+        :type state: int
         """
 
-        self._estado = estado
+        self._state = state
 
     @property
-    def fecha_modificacion(self) -> date:
-        """Gets the fecha_modificacion of this ProspectUpdate.
+    def first_name(self) -> str:
+        """Gets the first_name of this ProspectUpdate.
 
 
-        :return: The fecha_modificacion of this ProspectUpdate.
-        :rtype: date
+        :return: The first_name of this ProspectUpdate.
+        :rtype: str
         """
-        return self._fecha_modificacion
+        return self._first_name
 
-    @fecha_modificacion.setter
-    def fecha_modificacion(self, fecha_modificacion: date):
-        """Sets the fecha_modificacion of this ProspectUpdate.
+    @first_name.setter
+    def first_name(self, first_name: str):
+        """Sets the first_name of this ProspectUpdate.
 
 
-        :param fecha_modificacion: The fecha_modificacion of this ProspectUpdate.
-        :type fecha_modificacion: date
+        :param first_name: The first_name of this ProspectUpdate.
+        :type first_name: str
         """
 
-        self._fecha_modificacion = fecha_modificacion
+        self._first_name = first_name
+
+    @property
+    def last_name(self) -> str:
+        """Gets the last_name of this ProspectUpdate.
+
+
+        :return: The last_name of this ProspectUpdate.
+        :rtype: str
+        """
+        return self._last_name
+
+    @last_name.setter
+    def last_name(self, last_name: str):
+        """Sets the last_name of this ProspectUpdate.
+
+
+        :param last_name: The last_name of this ProspectUpdate.
+        :type last_name: str
+        """
+
+        self._last_name = last_name
+
+    @property
+    def email(self) -> str:
+        """Gets the email of this ProspectUpdate.
+
+
+        :return: The email of this ProspectUpdate.
+        :rtype: str
+        """
+        return self._email
+
+    @email.setter
+    def email(self, email: str):
+        """Sets the email of this ProspectUpdate.
+
+
+        :param email: The email of this ProspectUpdate.
+        :type email: str
+        """
+
+        self._email = email
+
+    @property
+    def phone(self) -> str:
+        """Gets the phone of this ProspectUpdate.
+
+
+        :return: The phone of this ProspectUpdate.
+        :rtype: str
+        """
+        return self._phone
+
+    @phone.setter
+    def phone(self, phone: str):
+        """Sets the phone of this ProspectUpdate.
+
+
+        :param phone: The phone of this ProspectUpdate.
+        :type phone: str
+        """
+
+        self._phone = phone
+
+    @property
+    def company(self) -> str:
+        """Gets the company of this ProspectUpdate.
+
+        Name of the company associated with the prospect  # noqa: E501
+
+        :return: The company of this ProspectUpdate.
+        :rtype: str
+        """
+        return self._company
+
+    @company.setter
+    def company(self, company: str):
+        """Sets the company of this ProspectUpdate.
+
+        Name of the company associated with the prospect  # noqa: E501
+
+        :param company: The company of this ProspectUpdate.
+        :type company: str
+        """
+
+        self._company = company

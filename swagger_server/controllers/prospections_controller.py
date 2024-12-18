@@ -42,3 +42,21 @@ def prospections_post():  # noqa: E501
             return {"message": f"Error processing request: {str(e)}"}, 500
     else:
         return {"message": "Request body must be JSON."}, 400
+
+def prospections_id_patch(id_):  # noqa: E501
+    """
+    Partially update a prospection.
+    This function handles PATCH requests to update an existing prospection's data.
+    """
+    if request.is_json:
+        try:
+            data = request.get_json()
+            # Llama al repositorio para actualizar la prospección con los datos recibidos
+            response, status = prospect_repository.update_prospection(id_, data)
+            return jsonify(response), status
+
+        except Exception as e:
+            logging.error(f"Error updating prospection: {e}")
+            return {"message": f"Error processing request: {str(e)}"}, 500
+    else:
+        return {"message": "Request body must be JSON."}, 400

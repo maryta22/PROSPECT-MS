@@ -14,7 +14,7 @@ class Prospection(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: int=None, prospect_id: int=None, cedula: str=None, company: str=None, state: int=None, _date: date=None, program: str=None, channel: str=None):  # noqa: E501
+    def __init__(self, id: int=None, prospect_id: int=None, cedula: str=None, company: str=None, state: int=None, prospection_state: str=None, _date: date=None, program: str=None, channel: str=None):  # noqa: E501
         """Prospection - a model defined in Swagger
 
         :param id: The id of this Prospection.  # noqa: E501
@@ -27,6 +27,8 @@ class Prospection(Model):
         :type company: str
         :param state: The state of this Prospection.  # noqa: E501
         :type state: int
+        :param prospection_state: The prospection_state of this Prospection.  # noqa: E501
+        :type prospection_state: str
         :param _date: The _date of this Prospection.  # noqa: E501
         :type _date: date
         :param program: The program of this Prospection.  # noqa: E501
@@ -40,6 +42,7 @@ class Prospection(Model):
             'cedula': str,
             'company': str,
             'state': int,
+            'prospection_state': str,
             '_date': date,
             'program': str,
             'channel': str
@@ -51,6 +54,7 @@ class Prospection(Model):
             'cedula': 'cedula',
             'company': 'company',
             'state': 'state',
+            'prospection_state': 'prospection_state',
             '_date': 'date',
             'program': 'program',
             'channel': 'channel'
@@ -60,6 +64,7 @@ class Prospection(Model):
         self._cedula = cedula
         self._company = company
         self._state = state
+        self._prospection_state = prospection_state
         self.__date = _date
         self._program = program
         self._channel = channel
@@ -189,6 +194,29 @@ class Prospection(Model):
         """
 
         self._state = state
+
+    @property
+    def prospection_state(self) -> str:
+        """Gets the prospection_state of this Prospection.
+
+        Current state of the prospection  # noqa: E501
+
+        :return: The prospection_state of this Prospection.
+        :rtype: str
+        """
+        return self._prospection_state
+
+    @prospection_state.setter
+    def prospection_state(self, prospection_state: str):
+        """Sets the prospection_state of this Prospection.
+
+        Current state of the prospection  # noqa: E501
+
+        :param prospection_state: The prospection_state of this Prospection.
+        :type prospection_state: str
+        """
+
+        self._prospection_state = prospection_state
 
     @property
     def _date(self) -> date:

@@ -269,6 +269,108 @@ paths:
         "404":
           description: Prospection not found or no emails available
       x-openapi-router-controller: swagger_server.controllers.prospections_controller
+  /prospects/{id}/prospections:
+    get:
+      tags:
+      - Prospections
+      summary: Retrieve all prospections for a specific prospect
+      operationId: prospects_id_prospections_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: List of prospections for the given prospect
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Prospection'
+                x-content-type: application/json
+        "404":
+          description: Prospect not found or no prospections available
+      x-openapi-router-controller: swagger_server.controllers.prospections_controller
+  /prospections/{id}/history:
+    get:
+      tags:
+      - Prospections
+      summary: Retrieve the history of a specific prospection
+      operationId: prospections_id_history_get
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the prospection
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: History of the prospection
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HistoryLog'
+                x-content-type: application/json
+        "404":
+          description: Prospection not found or no history available
+      x-openapi-router-controller: swagger_server.controllers.prospections_controller
+  /state-prospections:
+    get:
+      tags:
+      - Prospections
+      summary: Retrieve all states in the state_prospection table
+      operationId: get_state_prospection
+      responses:
+        "200":
+          description: List of states
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StateProspection'
+                x-content-type: application/json
+        "500":
+          description: Server error
+      x-openapi-router-controller: swagger_server.controllers.prospections_controller
+  /prospections/{id}/state-prospections:
+    patch:
+      tags:
+      - Prospections
+      summary: Update state for a prospection
+      operationId: prospections_id_state_patch
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/id_stateprospections_body'
+        required: true
+      responses:
+        "200":
+          description: Gestion state updated successfully
+        "404":
+          description: Prospection not found
+        "500":
+          description: Server error
+      x-openapi-router-controller: swagger_server.controllers.prospections_controller
 components:
   schemas:
     ProspectRequest:
@@ -341,6 +443,9 @@ components:
         state:
           type: integer
           description: State of the prospection
+        prospection_state:
+          type: string
+          description: Current state of the prospection
         date:
           type: string
           description: Date of the prospection
@@ -357,6 +462,7 @@ components:
         cedula: "1234567890"
         company: Tech Corp
         state: 1
+        prospection_state: Creado
         date: 2024-01-01
         program: MBA
         channel: Social Media
@@ -442,4 +548,46 @@ components:
         id_number: ID123456
         state: 1
         company: Tech Corp
+    HistoryLog:
+      type: object
+      properties:
+        type:
+          type: string
+          description: "Type of the history log (e.g., \"state change\" or \"advisor\
+            \ change\")"
+        description:
+          type: string
+          description: Description of the log entry
+        date:
+          type: string
+          description: Date when the event occurred
+          format: date
+      example:
+        type: state change
+        description: State changed to 'Active'
+        date: 2024-01-15
+    StateProspection:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the state
+        description:
+          type: string
+          description: Description of the state
+        state:
+          type: integer
+          description: Status of the state
+      example:
+        id: 1
+        description: Activo
+        state: 1
+    id_stateprospections_body:
+      type: object
+      properties:
+        new_state_id:
+          type: integer
+          description: ID of the new state
+      example:
+        new_state_id: 2
 

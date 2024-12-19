@@ -12,6 +12,13 @@ class StateProspection(Base):
     description = Column(String(50), nullable=False)
     state = Column(Integer, nullable=False)
 
+    # Relación con StateProspectionProspection
+    prospection_states = relationship(
+        'StateProspectionProspection',
+        back_populates='state_prospection',
+        cascade='all, delete-orphan'
+    )
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -142,6 +149,11 @@ class Prospection(Base):
     notes = relationship("Note", back_populates="prospection")
     sales_advisors = relationship("ProspectionSalesAdvisor", back_populates="prospection")
     emails = relationship("ProspectionEmail", back_populates="prospection")
+    state_prospections = relationship(
+        "StateProspectionProspection",  # Nombre del modelo relacionado
+        back_populates="prospection",  # Nombre de la relación inversa en StateProspectionProspection
+        cascade="all, delete-orphan"
+    )
 
     def to_dict(self):
         return {
@@ -251,4 +263,27 @@ class ProspectionEmail(Base):
             "id_prospection": self.id_prospection,
             "id_email": self.id_email,
             "email": self.email.to_dict() if self.email else None
+        }
+
+class StateProspectionProspection(Base):
+    __tablename__ = 'state_prospection_prospection'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    id_prospection = Column(Integer, ForeignKey('prospection.id'), nullable=False)
+    id_state_prospection = Column(Integer, ForeignKey('state_prospection.id'), nullable=False)
+    date = Column(Date, nullable=False)
+    state = Column(Integer, nullable=False)
+
+    # Relaciones
+    prospection = relationship('Prospection', back_populates='state_prospections')
+    state_prospection = relationship('StateProspection', back_populates='prospection_states')
+
+    def to_dict(self):
+        """Convierte el modelo en un diccionario para facilitar la serialización."""
+        return {
+            "id": self.id,
+            "id_prospection": self.id_prospection,
+            "id_state_prospection": self.id_state_prospection,
+            "date": self.date.strftime('%Y-%m-%d') if self.date else None,
+            "state": self.state
         }

@@ -313,7 +313,6 @@ class ProspectRepository:
     def get_prospection_history_with_logs(self, prospection_id):
         session = self.Session()
         try:
-            # Historial de cambios de vendedores
             vendedor_historial = session.query(
                 ProspectionSalesAdvisor.date.label("date"),
                 SalesAdvisor.id.label("vendedor_id"),
@@ -324,7 +323,6 @@ class ProspectRepository:
                    ).join(User, SalesAdvisor.id_user == User.id
                           ).filter(ProspectionSalesAdvisor.id_prospection == prospection_id).all()
 
-            # Historial de cambios de estado
             estado_historial = session.query(
                 StateProspectionProspection.date.label("date"),
                 StateProspection.description.label("state_description"),
@@ -332,10 +330,8 @@ class ProspectRepository:
             ).join(StateProspection, StateProspectionProspection.id_state_prospection == StateProspection.id
                    ).filter(StateProspectionProspection.id_prospection == prospection_id).all()
 
-            # Consolidar resultados con logs
             historial = []
 
-            # Procesar historial de vendedores
             for vendedor in vendedor_historial:
                 log = (
                     f"Vendedor asignado a {vendedor.vendedor_first_name} {vendedor.vendedor_last_name} "
@@ -343,7 +339,7 @@ class ProspectRepository:
                 )
                 historial.append({
                     "type": "vendedor",
-                    "date": vendedor.date.strftime('%Y-%m-%d') if vendedor.date else None,
+                    "date": vendedor.date.strftime('%Y-%m-%d %H:%M:%S') if vendedor.date else None,
                     "log": log,
                     "details": {
                         "vendedor_id": vendedor.vendedor_id,
@@ -352,15 +348,13 @@ class ProspectRepository:
                     }
                 })
 
-            # Procesar historial de estados
             for estado in estado_historial:
                 log = (
-                    f"Estado de prospección cambiado a '{estado.state_description}' "
-                    f"con estado {'activo' if estado.state else 'inactivo'}."
+                    f"Estado de prospección cambiado a '{estado.state_description}'."
                 )
                 historial.append({
                     "type": "estado",
-                    "date": estado.date.strftime('%Y-%m-%d') if estado.date else None,
+                    "date": estado.date.strftime('%Y-%m-%d %H:%M:%S') if estado.date else None,
                     "log": log,
                     "details": {
                         "state_description": estado.state_description,
@@ -368,7 +362,6 @@ class ProspectRepository:
                     }
                 })
 
-            # Ordenar por fecha (más reciente primero)
             historial.sort(key=lambda x: x["date"], reverse=True)
 
             return historial, 200
@@ -392,7 +385,6 @@ class ProspectRepository:
     def update_prospection_state(self, prospection_id, data):
         session = self.Session()
         try:
-            print("aqui")
             new_state_id = data["new_state_id"]
             session.query(StateProspectionProspection).filter_by(
                 id_prospection=prospection_id, state=1

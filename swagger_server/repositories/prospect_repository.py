@@ -1,14 +1,17 @@
 import logging
 from datetime import datetime
-
+import os
+from dotenv import load_dotenv
 from sqlalchemy.orm import sessionmaker, joinedload
 from sqlalchemy import create_engine
 from swagger_server.database_models.models import *
 
+load_dotenv()
 class ProspectRepository:
 
     def __init__(self):
-        self.engine = create_engine('mysql+pymysql://root:root@localhost:3306/espae_prospections')
+        pass_sam = os.getenv('DB_PASSWORD')
+        self.engine = create_engine(f'mysql+pymysql://root:{pass_sam}@localhost:3306/espae_prospections')
         self.Session = sessionmaker(bind=self.engine)
 
     def get_all_prospects(self):
@@ -118,21 +121,6 @@ class ProspectRepository:
         finally:
             session.close()
 
-    def get_prospects_by_sales_advisor_id(self, sales_advisor_id):
-        session = self.Session()
-        try:
-            prospections = session.query(Prospection).join(ProspectionSalesAdvisor).filter(
-                ProspectionSalesAdvisor.id_sales_advisor == sales_advisor_id
-            ).all()
-            if not prospections:
-                return {"message": "No prospects found for this sales advisor"}, 404
-
-            return [p.prospect.to_dict() for p in prospections], 200
-        except Exception as e:
-            logging.error(f"Error retrieving prospects for sales advisor: {e}")
-            return {"message": f"Error retrieving prospects: {str(e)}"}, 500
-        finally:
-            session.close()
 
     def get_notes_by_prospection_id(self, prospection_id):
         session = self.Session()

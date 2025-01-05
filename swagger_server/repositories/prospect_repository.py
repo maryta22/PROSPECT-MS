@@ -50,6 +50,7 @@ class ProspectRepository:
             session.flush()
 
             prospect_data["id_user"] = new_user.id
+            prospect_data["creation_date"] = datetime.now()  # Agregar la fecha y hora actual
             new_prospect = Prospect(**prospect_data)
             session.add(new_prospect)
             session.flush()

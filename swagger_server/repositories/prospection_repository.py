@@ -9,6 +9,8 @@ from swagger_server.database_models.models import Prospection, Prospect, Academi
 from dotenv import load_dotenv
 import os
 
+from ..services.automatic_reasig import AutomaticReasig
+
 from sqlalchemy.orm import aliased
 
 load_dotenv()
@@ -18,52 +20,6 @@ class ProspectionRepository:
         db_password = os.getenv('DB_PASSWORD')
         self.engine = create_engine(f'mysql+pymysql://root:{db_password}@localhost:3306/espae_prospections')
         self.Session = sessionmaker(bind=self.engine)
-
-    def get_all_prospectionss(self):
-        session = self.Session()
-        try:
-            prospections = session.query(
-                Prospection.id.label("id"),
-                Prospect.id.label("prospect_id"),
-                Prospect.id_number.label("cedula"),
-                Prospect.company.label("company"),
-                Prospection.state.label("state"),
-                Prospection.date.label("date"),
-                AcademicProgram.name.label("program"),
-                Prospection.channel.label("channel"),
-                StateProspection.description.label("prospection_state")  # Estado de gestión actual
-            ).join(Prospect, Prospection.id_prospect == Prospect.id
-                   ).join(AcademicProgram, Prospection.id_academic_program == AcademicProgram.id
-                          ).outerjoin(
-                StateProspectionProspection,
-                StateProspectionProspection.id_prospection == Prospection.id
-            ).outerjoin(
-                StateProspection,
-                StateProspectionProspection.id_state_prospection == StateProspection.id
-            ).filter(StateProspectionProspection.state == 1
-                     ).all()
-
-            result = [
-                {
-                    "id": row.id,
-                    "prospect_id": row.prospect_id,
-                    "cedula": row.cedula,
-                    "company": row.company,
-                    "state": row.state,
-                    "date": row.date.strftime('%Y-%m-%d') if row.date else None,
-                    "program": row.program,
-                    "channel": row.channel,
-                    "prospection_state": row.prospection_state
-                }
-                for row in prospections
-            ]
-            return result, 200
-        except Exception as e:
-            logging.error(f"Error retrieving prospections for table: {e}")
-            return {"message": f"Error retrieving data: {str(e)}"}, 500
-        finally:
-                session.close()
-
 
     def get_all_prospections(self):
         session = self.Session()
@@ -132,6 +88,9 @@ class ProspectionRepository:
                 for row in prospections
             ]
             print(result)
+            print("antes de la prueba")
+            prueba = AutomaticReasig().get_sales_advisor_with_least_prospections(1)
+            print(prueba)
             return result, 200
         except Exception as e:
             logging.error(f"Error retrieving prospections for admin: {e}")
@@ -139,6 +98,39 @@ class ProspectionRepository:
         finally:
             session.close()
 
+    def create_prospection(self, prospection_data):
+        session = self.Session()
+        try:
+            new_prospection = Prospection(
+                id_prospect=prospection_data["prospect_id"],
+                id_academic_program=prospection_data.get("academic_program_id"),
+                date=prospection_data.get("date", datetime.now()),
+                state=prospection_data.get("state", 1),
+                channel=prospection_data.get("channel", "web prospecciones")
+            )
+            session.add(new_prospection)
+            session.flush()
+
+            initial_state = StateProspectionProspection(
+                id_prospection=new_prospection.id,
+                id_state_prospection=1,
+                date=datetime.now(),
+                state=1
+            )
+            session.add(initial_state)
+
+            session.commit()
+
+            return {
+                "message": "Prospection created successfully.",
+                "id": new_prospection.id
+            }, 201
+        except Exception as e:
+            session.rollback()
+            logging.error(f"Error creating prospection: {e}")
+            return {"message": f"Error creating prospection: {str(e)}"}, 400
+        finally:
+            session.close()
 
     def create_prospection_sales_advisor(self, prospection_id, sales_advisor_id):
         session = self.Session()
@@ -191,5 +183,21 @@ class ProspectionRepository:
             logging.error(f"Error saving note: {e}")
             session.rollback()
             return {"message": f"Error saving note: {str(e)}"}, 500
+        finally:
+            session.close()
+
+    def get_prospect_by_id(self, id):
+        session = self.Session()
+        try:
+            prospect = session.query(Prospect).options(
+                joinedload(Prospect.user),
+                joinedload(Prospect.city)
+            ).filter_by(id=id).first()
+            if not prospect:
+                return {"message": "Prospect not found"}, 404
+            return prospect.to_dict(), 200
+        except Exception as e:
+            logging.error(f"Error retrieving prospect: {e}")
+            return {"message": f"Error retrieving prospect: {str(e)}"}, 500
         finally:
             session.close()

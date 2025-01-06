@@ -1,7 +1,11 @@
 import logging
+from datetime import datetime
+
+from flask import jsonify
 from sqlalchemy.orm import sessionmaker, joinedload
 from sqlalchemy import create_engine
-from swagger_server.database_models.models import Prospection, Prospect, AcademicProgram, StateProspection, StateProspectionProspection
+from swagger_server.database_models.models import Prospection, Prospect, AcademicProgram, StateProspection, \
+    StateProspectionProspection, Note
 from dotenv import load_dotenv
 import os
 
@@ -9,8 +13,7 @@ load_dotenv()
 
 class ProspectionRepository:
     def __init__(self):
-        pass_sam = os.getenv('DB_PASSWORD')
-        self.engine = create_engine(f'mysql+pymysql://root:{pass_sam}@localhost:3306/espae_prospections')
+        self.engine = create_engine('mysql+pymysql://root:root@localhost:3306/espae_prospections')
         self.Session = sessionmaker(bind=self.engine)
 
     def get_all_prospections(self):
@@ -54,5 +57,39 @@ class ProspectionRepository:
         except Exception as e:
             logging.error(f"Error retrieving prospections: {e}")
             return {"message": f"Error retrieving prospections: {str(e)}"}, 500
+        finally:
+            session.close()
+
+    def get_notes_by_prospection_id(self, prospection_id):
+        session = self.Session()
+        try:
+            notes = session.query(Note).filter_by(id_prospection=prospection_id).all()
+            if not notes:
+                return {"message": "No notes found for this prospection"}, 404
+
+            return [note.to_dict() for note in notes], 200
+        except Exception as e:
+            logging.error(f"Error retrieving notes: {e}")
+            return {"message": f"Error retrieving notes: {str(e)}"}, 500
+        finally:
+            session.close()
+
+    def save_note(self, body):
+        session = self.Session()
+        try:
+            new_note = Note(
+                id_prospection=body["prospection_id"],
+                message=body["message"],
+                date= datetime.now()
+            )
+
+            session.add(new_note)
+            session.commit()
+
+            return new_note.to_dict(), 201
+        except Exception as e:
+            logging.error(f"Error saving note: {e}")
+            session.rollback()
+            return {"message": f"Error saving note: {str(e)}"}, 500
         finally:
             session.close()

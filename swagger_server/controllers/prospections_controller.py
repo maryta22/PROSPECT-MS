@@ -15,9 +15,6 @@ def prospections_id_get(id_):  # noqa: E501
 def prospections_id_delete(id_):  # noqa: E501
     return prospect_repository.delete_prospection_by_id(id_)
 
-def prospections_id_notes_get(id_):  # noqa: E501
-    return prospect_repository.get_notes_by_prospection_id(id_)
-
 def prospections_id_emails_get(id_):  # noqa: E501
     return prospect_repository.get_emails_by_prospection_id(id_)
 

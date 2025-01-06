@@ -10,15 +10,15 @@ load_dotenv()
 class ProspectRepository:
 
     def __init__(self):
-        pass_sam = os.getenv('DB_PASSWORD')
-        self.engine = create_engine(f'mysql+pymysql://root:{pass_sam}@localhost:3306/espae_prospections')
+        self.engine = create_engine('mysql+pymysql://root:root@localhost:3306/espae_prospections')
         self.Session = sessionmaker(bind=self.engine)
 
     def get_all_prospects(self):
         session = self.Session()
         try:
             prospects = session.query(Prospect).options(
-                joinedload(Prospect.user)
+                joinedload(Prospect.user),
+                joinedload(Prospect.city)
             ).all()
             return [prospect.to_dict() for prospect in prospects], 200
         except Exception as e:
@@ -31,7 +31,8 @@ class ProspectRepository:
         session = self.Session()
         try:
             prospect = session.query(Prospect).options(
-                joinedload(Prospect.user)
+                joinedload(Prospect.user),
+                joinedload(Prospect.city)
             ).filter_by(id=id).first()
             if not prospect:
                 return {"message": "Prospect not found"}, 404
@@ -89,6 +90,12 @@ class ProspectRepository:
 
             if "state" in clean_data:
                 prospect.state = clean_data["state"]
+            if "id_city" in clean_data:
+                prospect.id_city = clean_data["id_city"]
+            if "degree" in clean_data:
+                prospect.degree = clean_data["degree"]
+            if "company" in clean_data:
+                prospect.company = clean_data["company"]
 
             user_fields = ["first_name", "last_name", "email", "phone"]
             for field in user_fields:
@@ -119,21 +126,6 @@ class ProspectRepository:
             session.rollback()
             logging.error(f"Error deleting prospect: {e}")
             return {"message": f"Error deleting prospect: {str(e)}"}, 400
-        finally:
-            session.close()
-
-
-    def get_notes_by_prospection_id(self, prospection_id):
-        session = self.Session()
-        try:
-            notes = session.query(Note).filter_by(id_prospection=prospection_id).all()
-            if not notes:
-                return {"message": "No notes found for this prospection"}, 404
-
-            return [note.to_dict() for note in notes], 200
-        except Exception as e:
-            logging.error(f"Error retrieving notes: {e}")
-            return {"message": f"Error retrieving notes: {str(e)}"}, 500
         finally:
             session.close()
 
@@ -428,4 +420,19 @@ class ProspectRepository:
             logging.error(f"Error creating prospection: {e}")
             return {"message": f"Error creating prospection: {str(e)}"}, 400
         finally:
+            session.close()
+
+    def get_all_cities(self):
+        session = self.Session()
+        try:
+            # Consulta todas las ciudades
+            cities = session.query(City).all()
+            # Convierte las ciudades a diccionarios
+            return [city.to_dict() for city in cities], 200
+        except Exception as e:
+            # Manejo de errores
+            logging.error(f"Error retrieving cities: {e}")
+            return {"message": f"Error retrieving cities: {str(e)}"}, 500
+        finally:
+            # Cierra la sesión
             session.close()

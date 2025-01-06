@@ -14,7 +14,7 @@ class ProspectRequestProspect(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id_number: str=None, state: int=None, company: str=None):  # noqa: E501
+    def __init__(self, id_number: str=None, state: int=None, company: str=None, id_city: int=None, degree: str=None):  # noqa: E501
         """ProspectRequestProspect - a model defined in Swagger
 
         :param id_number: The id_number of this ProspectRequestProspect.  # noqa: E501
@@ -23,21 +23,31 @@ class ProspectRequestProspect(Model):
         :type state: int
         :param company: The company of this ProspectRequestProspect.  # noqa: E501
         :type company: str
+        :param id_city: The id_city of this ProspectRequestProspect.  # noqa: E501
+        :type id_city: int
+        :param degree: The degree of this ProspectRequestProspect.  # noqa: E501
+        :type degree: str
         """
         self.swagger_types = {
             'id_number': str,
             'state': int,
-            'company': str
+            'company': str,
+            'id_city': int,
+            'degree': str
         }
 
         self.attribute_map = {
             'id_number': 'id_number',
             'state': 'state',
-            'company': 'company'
+            'company': 'company',
+            'id_city': 'id_city',
+            'degree': 'degree'
         }
         self._id_number = id_number
         self._state = state
         self._company = company
+        self._id_city = id_city
+        self._degree = degree
 
     @classmethod
     def from_dict(cls, dikt) -> 'ProspectRequestProspect':
@@ -114,3 +124,49 @@ class ProspectRequestProspect(Model):
         """
 
         self._company = company
+
+    @property
+    def id_city(self) -> int:
+        """Gets the id_city of this ProspectRequestProspect.
+
+        ID of the associated city  # noqa: E501
+
+        :return: The id_city of this ProspectRequestProspect.
+        :rtype: int
+        """
+        return self._id_city
+
+    @id_city.setter
+    def id_city(self, id_city: int):
+        """Sets the id_city of this ProspectRequestProspect.
+
+        ID of the associated city  # noqa: E501
+
+        :param id_city: The id_city of this ProspectRequestProspect.
+        :type id_city: int
+        """
+
+        self._id_city = id_city
+
+    @property
+    def degree(self) -> str:
+        """Gets the degree of this ProspectRequestProspect.
+
+        Degree or title of the prospect  # noqa: E501
+
+        :return: The degree of this ProspectRequestProspect.
+        :rtype: str
+        """
+        return self._degree
+
+    @degree.setter
+    def degree(self, degree: str):
+        """Sets the degree of this ProspectRequestProspect.
+
+        Degree or title of the prospect  # noqa: E501
+
+        :param degree: The degree of this ProspectRequestProspect.
+        :type degree: str
+        """
+
+        self._degree = degree

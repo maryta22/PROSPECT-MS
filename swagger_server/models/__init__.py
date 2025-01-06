@@ -3,10 +3,12 @@
 # flake8: noqa
 from __future__ import absolute_import
 # import models into model package
+from swagger_server.models.city import City
 from swagger_server.models.email import Email
 from swagger_server.models.history_log import HistoryLog
 from swagger_server.models.id_stateprospections_body import IdStateprospectionsBody
 from swagger_server.models.note import Note
+from swagger_server.models.note_request import NoteRequest
 from swagger_server.models.prospect_request import ProspectRequest
 from swagger_server.models.prospect_request_prospect import ProspectRequestProspect
 from swagger_server.models.prospect_update import ProspectUpdate

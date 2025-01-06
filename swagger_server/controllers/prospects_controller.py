@@ -21,6 +21,7 @@ def prospects_id_patch(body, id_):  # noqa: E501
             raw_data = request.get_json()
             logging.info(f"Data received to update prospect: {raw_data}")
             body = ProspectUpdate.from_dict(raw_data)  # noqa: E501
+            print(body)
             return prospect_repository.update_prospect(id_, body)
         except ValueError as ve:
             logging.error(f"Validation error: {ve}")

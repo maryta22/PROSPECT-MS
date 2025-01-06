@@ -117,7 +117,10 @@ class Prospect(Base):
     creation_date = Column(Date, nullable=False)
     modification_date = Column(Date, nullable=True)
     company = Column(String(255), nullable=True)
+    id_city = Column(Integer, ForeignKey('city.id'), nullable=True)
+    degree = Column(String(255), nullable=True)
 
+    city = relationship("City", back_populates="prospects")
     user = relationship("User", back_populates="prospects")
     prospections = relationship("Prospection", back_populates="prospect")
 
@@ -130,6 +133,8 @@ class Prospect(Base):
             "creation_date": self.creation_date,
             "modification_date": self.modification_date,
             "company": self.company,
+            "city": self.city.to_dict() if self.city else None,
+            "degree": self.degree,
             "user": self.user.to_dict() if self.user else None
         }
 
@@ -286,4 +291,19 @@ class StateProspectionProspection(Base):
             "id_state_prospection": self.id_state_prospection,
             "date": self.date.strftime('%Y-%m-%d') if self.date else None,
             "state": self.state
+        }
+
+class City(Base):
+    __tablename__ = 'city'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(255), nullable=False)
+
+    # Relación con Prospect
+    prospects = relationship("Prospect", back_populates="city")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name
         }

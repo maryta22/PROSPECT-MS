@@ -14,7 +14,7 @@ class ProspectUpdate(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, state: int=None, first_name: str=None, last_name: str=None, email: str=None, phone: str=None, company: str=None):  # noqa: E501
+    def __init__(self, state: int=None, first_name: str=None, last_name: str=None, email: str=None, phone: str=None, company: str=None, id_city: int=None, degree: str=None):  # noqa: E501
         """ProspectUpdate - a model defined in Swagger
 
         :param state: The state of this ProspectUpdate.  # noqa: E501
@@ -29,6 +29,10 @@ class ProspectUpdate(Model):
         :type phone: str
         :param company: The company of this ProspectUpdate.  # noqa: E501
         :type company: str
+        :param id_city: The id_city of this ProspectUpdate.  # noqa: E501
+        :type id_city: int
+        :param degree: The degree of this ProspectUpdate.  # noqa: E501
+        :type degree: str
         """
         self.swagger_types = {
             'state': int,
@@ -36,7 +40,9 @@ class ProspectUpdate(Model):
             'last_name': str,
             'email': str,
             'phone': str,
-            'company': str
+            'company': str,
+            'id_city': int,
+            'degree': str
         }
 
         self.attribute_map = {
@@ -45,7 +51,9 @@ class ProspectUpdate(Model):
             'last_name': 'last_name',
             'email': 'email',
             'phone': 'phone',
-            'company': 'company'
+            'company': 'company',
+            'id_city': 'id_city',
+            'degree': 'degree'
         }
         self._state = state
         self._first_name = first_name
@@ -53,6 +61,8 @@ class ProspectUpdate(Model):
         self._email = email
         self._phone = phone
         self._company = company
+        self._id_city = id_city
+        self._degree = degree
 
     @classmethod
     def from_dict(cls, dikt) -> 'ProspectUpdate':
@@ -69,6 +79,7 @@ class ProspectUpdate(Model):
     def state(self) -> int:
         """Gets the state of this ProspectUpdate.
 
+        The state of the prospect  # noqa: E501
 
         :return: The state of this ProspectUpdate.
         :rtype: int
@@ -79,6 +90,7 @@ class ProspectUpdate(Model):
     def state(self, state: int):
         """Sets the state of this ProspectUpdate.
 
+        The state of the prospect  # noqa: E501
 
         :param state: The state of this ProspectUpdate.
         :type state: int
@@ -90,6 +102,7 @@ class ProspectUpdate(Model):
     def first_name(self) -> str:
         """Gets the first_name of this ProspectUpdate.
 
+        First name of the user associated with the prospect  # noqa: E501
 
         :return: The first_name of this ProspectUpdate.
         :rtype: str
@@ -100,6 +113,7 @@ class ProspectUpdate(Model):
     def first_name(self, first_name: str):
         """Sets the first_name of this ProspectUpdate.
 
+        First name of the user associated with the prospect  # noqa: E501
 
         :param first_name: The first_name of this ProspectUpdate.
         :type first_name: str
@@ -111,6 +125,7 @@ class ProspectUpdate(Model):
     def last_name(self) -> str:
         """Gets the last_name of this ProspectUpdate.
 
+        Last name of the user associated with the prospect  # noqa: E501
 
         :return: The last_name of this ProspectUpdate.
         :rtype: str
@@ -121,6 +136,7 @@ class ProspectUpdate(Model):
     def last_name(self, last_name: str):
         """Sets the last_name of this ProspectUpdate.
 
+        Last name of the user associated with the prospect  # noqa: E501
 
         :param last_name: The last_name of this ProspectUpdate.
         :type last_name: str
@@ -132,6 +148,7 @@ class ProspectUpdate(Model):
     def email(self) -> str:
         """Gets the email of this ProspectUpdate.
 
+        Email address of the user associated with the prospect  # noqa: E501
 
         :return: The email of this ProspectUpdate.
         :rtype: str
@@ -142,6 +159,7 @@ class ProspectUpdate(Model):
     def email(self, email: str):
         """Sets the email of this ProspectUpdate.
 
+        Email address of the user associated with the prospect  # noqa: E501
 
         :param email: The email of this ProspectUpdate.
         :type email: str
@@ -153,6 +171,7 @@ class ProspectUpdate(Model):
     def phone(self) -> str:
         """Gets the phone of this ProspectUpdate.
 
+        Phone number of the user associated with the prospect  # noqa: E501
 
         :return: The phone of this ProspectUpdate.
         :rtype: str
@@ -163,6 +182,7 @@ class ProspectUpdate(Model):
     def phone(self, phone: str):
         """Sets the phone of this ProspectUpdate.
 
+        Phone number of the user associated with the prospect  # noqa: E501
 
         :param phone: The phone of this ProspectUpdate.
         :type phone: str
@@ -192,3 +212,49 @@ class ProspectUpdate(Model):
         """
 
         self._company = company
+
+    @property
+    def id_city(self) -> int:
+        """Gets the id_city of this ProspectUpdate.
+
+        ID of the associated city  # noqa: E501
+
+        :return: The id_city of this ProspectUpdate.
+        :rtype: int
+        """
+        return self._id_city
+
+    @id_city.setter
+    def id_city(self, id_city: int):
+        """Sets the id_city of this ProspectUpdate.
+
+        ID of the associated city  # noqa: E501
+
+        :param id_city: The id_city of this ProspectUpdate.
+        :type id_city: int
+        """
+
+        self._id_city = id_city
+
+    @property
+    def degree(self) -> str:
+        """Gets the degree of this ProspectUpdate.
+
+        Degree or title of the prospect  # noqa: E501
+
+        :return: The degree of this ProspectUpdate.
+        :rtype: str
+        """
+        return self._degree
+
+    @degree.setter
+    def degree(self, degree: str):
+        """Sets the degree of this ProspectUpdate.
+
+        Degree or title of the prospect  # noqa: E501
+
+        :param degree: The degree of this ProspectUpdate.
+        :type degree: str
+        """
+
+        self._degree = degree

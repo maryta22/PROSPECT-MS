@@ -218,7 +218,7 @@ paths:
   /prospections/{id}/notes:
     get:
       tags:
-      - Prospections
+      - Notes
       summary: Retrieve notes for a specific prospection
       operationId: prospections_id_notes_get
       parameters:
@@ -241,7 +241,29 @@ paths:
                 x-content-type: application/json
         "404":
           description: Prospection not found or no notes available
-      x-openapi-router-controller: swagger_server.controllers.prospections_controller
+      x-openapi-router-controller: swagger_server.controllers.notes_controller
+  /notes:
+    post:
+      tags:
+      - Notes
+      summary: Save a new note
+      operationId: notes_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteRequest'
+        required: true
+      responses:
+        "201":
+          description: Note successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        "400":
+          description: Invalid input data
+      x-openapi-router-controller: swagger_server.controllers.notes_controller
   /prospections/{id}/emails:
     get:
       tags:
@@ -371,6 +393,25 @@ paths:
         "500":
           description: Server error
       x-openapi-router-controller: swagger_server.controllers.prospections_controller
+  /cities:
+    get:
+      tags:
+      - Cities
+      summary: Retrieve all cities
+      operationId: get_all_cities
+      responses:
+        "200":
+          description: List of cities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/City'
+                x-content-type: application/json
+        "500":
+          description: Server error
+      x-openapi-router-controller: swagger_server.controllers.city_controller
 components:
   schemas:
     ProspectRequest:
@@ -385,23 +426,37 @@ components:
       properties:
         state:
           type: integer
+          description: The state of the prospect
         first_name:
           type: string
+          description: First name of the user associated with the prospect
         last_name:
           type: string
+          description: Last name of the user associated with the prospect
         email:
           type: string
+          description: Email address of the user associated with the prospect
         phone:
           type: string
+          description: Phone number of the user associated with the prospect
         company:
           type: string
           description: Name of the company associated with the prospect
+        id_city:
+          type: integer
+          description: ID of the associated city
+        degree:
+          type: string
+          description: Degree or title of the prospect
       example:
         state: 2
         first_name: Jane
         last_name: Doe
         email: jane.doe@example.com
         phone: "9876543210"
+        company: Example Corp
+        id_city: 3
+        degree: Master in Engineering
     ProspectWithUser:
       type: object
       properties:
@@ -544,10 +599,18 @@ components:
         company:
           type: string
           description: Name of the company associated with the prospect
+        id_city:
+          type: integer
+          description: ID of the associated city
+        degree:
+          type: string
+          description: Degree or title of the prospect
       example:
         id_number: ID123456
         state: 1
         company: Tech Corp
+        id_city: 1
+        degree: Master in Business Administration
     HistoryLog:
       type: object
       properties:
@@ -590,4 +653,26 @@ components:
           description: ID of the new state
       example:
         new_state_id: 2
+    NoteRequest:
+      type: object
+      properties:
+        prospection_id:
+          type: integer
+          description: ID of the associated prospection
+        message:
+          type: string
+          description: The content of the note
+      example:
+        prospection_id: 1
+        message: This is a sample note
+    City:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      example:
+        id: 1
+        name: Quito
 

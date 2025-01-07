@@ -87,10 +87,6 @@ class ProspectionRepository:
                 }
                 for row in prospections
             ]
-            print(result)
-            print("antes de la prueba")
-            prueba = AutomaticReasig().get_sales_advisor_with_least_prospections(1)
-            print(prueba)
             return result, 200
         except Exception as e:
             logging.error(f"Error retrieving prospections for admin: {e}")
@@ -101,9 +97,27 @@ class ProspectionRepository:
     def create_prospection(self, prospection_data):
         session = self.Session()
         try:
+            # Obtener el vendedor con el menor número de prospecciones para el programa seleccionado
+            program_id = prospection_data.get("program")
+            if not program_id or program_id=="None":
+                return {"message": "Academic program ID is required."}, 400
+
+            sales_advisor_id = AutomaticReasig().get_sales_advisor_with_least_prospections(program_id)
+            print(sales_advisor_id)
+            if not sales_advisor_id:
+                return {"message": "No sales advisor found for the selected program."}, 404
+
+            # Crear la nueva prospección
+            print("creando nuevo prospeccion con id: ",prospection_data.get("prospect"))
+            if not prospection_data.get("prospect"):
+                return {"message": "Prospect ID is required."}, 400
+
+            if not program_id or program_id=="None":
+                return {"message": "Academic program ID is required."}, 400
+
             new_prospection = Prospection(
-                id_prospect=prospection_data["prospect_id"],
-                id_academic_program=prospection_data.get("academic_program_id"),
+                id_prospect=prospection_data.get("prospect"),  # Asegúrate de que el prospect_id se esté utilizando correctamente
+                id_academic_program=program_id,
                 date=prospection_data.get("date", datetime.now()),
                 state=prospection_data.get("state", 1),
                 channel=prospection_data.get("channel", "web prospecciones")
@@ -111,6 +125,21 @@ class ProspectionRepository:
             session.add(new_prospection)
             session.flush()
 
+            print("New prospection ID: ", new_prospection.id)
+            print("Sales advisor ID: ", sales_advisor_id)
+            print("pondré en la tabla de prospeciton sales advisor..")
+            # Asignar la prospección al vendedor obtenido
+            new_prospection_sales_advisor = ProspectionSalesAdvisor(
+                id_prospection=new_prospection.id,
+                id_sales_advisor=sales_advisor_id,
+                state=1,  # Estado activo
+                date=datetime.now()
+            )
+            session.add(new_prospection_sales_advisor)
+            print("prospection sales advisor añadido!")
+
+            print("Ahora veré initial state...")
+            # Crear el estado inicial de la prospección
             initial_state = StateProspectionProspection(
                 id_prospection=new_prospection.id,
                 id_state_prospection=1,
@@ -118,17 +147,67 @@ class ProspectionRepository:
                 state=1
             )
             session.add(initial_state)
-
+            print("initial state añadido!")
             session.commit()
+            print("commiteado!")
 
-            return {
-                "message": "Prospection created successfully.",
-                "id": new_prospection.id
-            }, 201
+            print(
+                "query ---- obtener datos completos de la prospeccion recien creada!"
+            )
+            # Obtener los datos completos de la prospección recién creada
+            complete_prospection = session.query(
+                Prospection.id.label("id"),
+                Prospect.id.label("prospect_id"),
+                Prospect.id_number.label("cedula"),
+                Prospect.company.label("company"),
+                Prospection.state.label("state"),
+                Prospection.date.label("date"),
+                AcademicProgram.name.label("program"),
+                Prospection.channel.label("channel"),
+                StateProspection.description.label("prospection_state"),
+                User.first_name.label("prospect_first_name"),
+                User.last_name.label("prospect_last_name"),
+                SalesAdvisor.id.label("sales_advisor_id"),
+                User.first_name.label("sales_advisor_first_name"),
+                User.last_name.label("sales_advisor_last_name")
+            ).join(Prospect, Prospection.id_prospect == Prospect.id
+                   ).join(AcademicProgram, Prospection.id_academic_program == AcademicProgram.id
+                          ).outerjoin(
+                StateProspectionProspection,
+                StateProspectionProspection.id_prospection == Prospection.id
+            ).outerjoin(
+                StateProspection,
+                StateProspectionProspection.id_state_prospection == StateProspection.id
+            ).outerjoin(
+                ProspectionSalesAdvisor,
+                ProspectionSalesAdvisor.id_prospection == Prospection.id
+            ).outerjoin(
+                SalesAdvisor,
+                SalesAdvisor.id == ProspectionSalesAdvisor.id_sales_advisor
+            ).outerjoin(
+                User,
+                User.id == SalesAdvisor.id_user
+            ).filter(Prospection.id == new_prospection.id).first()
+            print("fin de la query: ", complete_prospection)
+
+            result = {
+                "id": complete_prospection.id,
+                "prospect_id": complete_prospection.prospect_id,
+                "cedula": complete_prospection.cedula,
+                "company": complete_prospection.company,
+                "state": complete_prospection.state,
+                "date": complete_prospection.date.strftime('%Y-%m-%d') if complete_prospection.date else None,
+                "program": complete_prospection.program,
+                "channel": complete_prospection.channel,
+                "prospection_state": complete_prospection.prospection_state,
+                "prospect_name": f"{complete_prospection.prospect_first_name} {complete_prospection.prospect_last_name}" if complete_prospection.prospect_first_name and complete_prospection.prospect_last_name else None,
+                "sales_advisor": f"{complete_prospection.sales_advisor_first_name} {complete_prospection.sales_advisor_last_name}" if complete_prospection.sales_advisor_first_name and complete_prospection.sales_advisor_last_name else None
+            }
+            return result, 201
         except Exception as e:
             session.rollback()
-            logging.error(f"Error creating prospection: {e}")
-            return {"message": f"Error creating prospection: {str(e)}"}, 400
+            logging.error(f"Error creating prospection: {e} holap")
+            return {"message": f"Error creating prospection: {str(e)}"}, 500
         finally:
             session.close()
 

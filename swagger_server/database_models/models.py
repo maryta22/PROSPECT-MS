@@ -70,7 +70,7 @@ class Administrator(Base):
             "modification_date": self.modification_date.strftime('%Y-%m-%d') if self.modification_date else None
         }
 
-# Table: SalesAdvisor
+# Modelo: SalesAdvisor
 class SalesAdvisor(Base):
     __tablename__ = 'sales_advisor'
 
@@ -79,6 +79,7 @@ class SalesAdvisor(Base):
     state = Column(Integer, nullable=False)
 
     user = relationship("User", back_populates="sales_advisors")
+    program_sellers = relationship("ProgramSellers", back_populates="sales_advisor")
     prospections = relationship("ProspectionSalesAdvisor", back_populates="sales_advisor")
 
     def to_dict(self):
@@ -98,11 +99,34 @@ class AcademicProgram(Base):
     description = Column(String(500), nullable=False)
     state = Column(Integer, nullable=False)
 
+    program_sellers = relationship("ProgramSellers", back_populates="academic_program")
+
     def to_dict(self):
         return {
             "id": self.id,
             "name": self.name,
             "description": self.description,
+            "state": self.state,
+            "sellers": [ps.sales_advisor.to_dict() for ps in self.program_sellers]
+        }
+    
+# Table: ProgramSellers
+class ProgramSellers(Base):
+    __tablename__ = 'academic_program_sales_advisor'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    id_academic_program = Column(Integer, ForeignKey('academic_program.id'), nullable=False)
+    id_sales_advisor = Column(Integer, ForeignKey('sales_advisor.id'), nullable=False)
+    state = Column(Integer, nullable=False)
+
+    academic_program = relationship("AcademicProgram", back_populates="program_sellers")
+    sales_advisor = relationship("SalesAdvisor", back_populates="program_sellers")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "id_academic_program": self.id_academic_program,
+            "id_sales_advisor": self.id_sales_advisor,
             "state": self.state
         }
 

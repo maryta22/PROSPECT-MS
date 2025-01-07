@@ -46,6 +46,8 @@ def prospects_post():  # noqa: E501
         except Exception as e:
             logging.error(f"Error processing request: {e}")
             return {"message": f"Error processing request: {str(e)}"}, 500
+    else:
+        return {"message": "Request body must be JSON."}, 400
 
 def prospects_sales_advisor_advisor_id_get(advisor_id):  # noqa: E501
     return prospect_repository.get_prospects_by_sales_advisor_id(advisor_id)

@@ -10,7 +10,8 @@ load_dotenv()
 class ProspectRepository:
 
     def __init__(self):
-        self.engine = create_engine('mysql+pymysql://root:root@localhost:3306/espae_prospections')
+        db_password = os.getenv('DB_PASSWORD')
+        self.engine = create_engine(f'mysql+pymysql://root:{db_password}@localhost:3306/espae_prospections')
         self.Session = sessionmaker(bind=self.engine)
 
     def get_all_prospects(self):
@@ -51,6 +52,7 @@ class ProspectRepository:
             session.flush()
 
             prospect_data["id_user"] = new_user.id
+            prospect_data["creation_date"] = datetime.now()  # Agregar la fecha y hora actual
             new_prospect = Prospect(**prospect_data)
             session.add(new_prospect)
             session.flush()

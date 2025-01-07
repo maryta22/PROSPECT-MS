@@ -390,6 +390,21 @@ class ProspectRepository:
     def create_prospection(self, prospection_data):
         session = self.Session()
         try:
+            # Validar si ya existe una prospección para el prospecto y programa académico específico
+            existing_prospection = session.query(Prospection).join(StateProspectionProspection).filter(
+                Prospection.id_prospect == prospection_data["prospect_id"],
+                Prospection.id_academic_program == prospection_data["academic_program_id"],
+                StateProspectionProspection.id_state_prospection != 4,
+                StateProspectionProspection.id_state_prospection != 5,
+                StateProspectionProspection.state == 1,
+            ).first()
+
+            if existing_prospection:
+                return {
+                    "message": "Ya existe una prospección activa con este programa académico."
+                }, 400
+
+            # Crear nueva prospección
             new_prospection = Prospection(
                 id_prospect=prospection_data["prospect_id"],
                 id_academic_program=prospection_data.get("academic_program_id"),
@@ -400,6 +415,7 @@ class ProspectRepository:
             session.add(new_prospection)
             session.flush()
 
+            # Agregar estado inicial
             initial_state = StateProspectionProspection(
                 id_prospection=new_prospection.id,
                 id_state_prospection=1,
@@ -411,13 +427,13 @@ class ProspectRepository:
             session.commit()
 
             return {
-                "message": "Prospection created successfully.",
+                "message": "Prospección creada exitosamente.",
                 "id": new_prospection.id
             }, 201
         except Exception as e:
             session.rollback()
-            logging.error(f"Error creating prospection: {e}")
-            return {"message": f"Error creating prospection: {str(e)}"}, 400
+            logging.error(f"Error creando la prospección: {e}")
+            return {"message": f"Error creando la prospección: {str(e)}"}, 400
         finally:
             session.close()
 

@@ -24,7 +24,7 @@ class ProspectionRepository:
     def get_all_prospections(self):
         session = self.Session()
         try:
-            # Crea alias para la tabla User
+            # Crear alias para la tabla User
             prospect_user_alias = aliased(User)  # Para los prospectos
             sales_advisor_user_alias = aliased(User)  # Para los asesores
     
@@ -66,9 +66,10 @@ class ProspectionRepository:
             ).outerjoin(
                 sales_advisor_user_alias, SalesAdvisor.id_user == sales_advisor_user_alias.id  # Sales Advisor -> User
             ).filter(
-                StateProspectionProspection.state == 1
+                StateProspectionProspection.state == 1,
+                ProspectionSalesAdvisor.state == 1  # Solo considerar ProspectionSalesAdvisor con estado 1
             ).all()
-    
+
             result = [
                 {
                     "id": row.id,

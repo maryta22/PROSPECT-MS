@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from sqlalchemy.orm import sessionmaker, joinedload
 from sqlalchemy import create_engine
 from swagger_server.database_models.models import *
+from swagger_server.services.automatic_reasig import AutomaticReasig
 
 load_dotenv()
 class ProspectRepository:
@@ -22,6 +23,9 @@ class ProspectRepository:
                 joinedload(Prospect.user),
                 joinedload(Prospect.city)
             ).all()
+            print("antes de la prueba")
+            prueba = AutomaticReasig().get_sales_advisor_with_least_prospections(36)
+            print(prueba)
             return [prospect.to_dict() for prospect in prospects], 200
         except Exception as e:
             logging.error(f"Error retrieving prospects: {e}")

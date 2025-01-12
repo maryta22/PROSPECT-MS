@@ -10,8 +10,9 @@ load_dotenv()
 class ProspectRepository:
 
     def __init__(self):
-        db_password = os.getenv('DB_PASSWORD')
-        self.engine = create_engine(f'mysql+pymysql://root:{db_password}@localhost:3306/espae_prospections')
+        #db_password = os.getenv('DB_PASSWORD')
+        #self.engine = create_engine(f'mysql+pymysql://root:{db_password}@localhost:3306/espae_prospections')
+        self.engine = create_engine('mysql+pymysql://root:root@localhost:3306/espae_prospections')
         self.Session = sessionmaker(bind=self.engine)
 
     def get_all_prospects(self):
@@ -295,6 +296,7 @@ class ProspectRepository:
     def get_prospection_history_with_logs(self, prospection_id):
         session = self.Session()
         try:
+            # Obtener historial de vendedores
             vendedor_historial = session.query(
                 ProspectionSalesAdvisor.date.label("date"),
                 SalesAdvisor.id.label("vendedor_id"),
@@ -305,6 +307,7 @@ class ProspectRepository:
                    ).join(User, SalesAdvisor.id_user == User.id
                           ).filter(ProspectionSalesAdvisor.id_prospection == prospection_id).all()
 
+            # Obtener historial de estados
             estado_historial = session.query(
                 StateProspectionProspection.date.label("date"),
                 StateProspection.description.label("state_description"),
@@ -312,6 +315,14 @@ class ProspectRepository:
             ).join(StateProspection, StateProspectionProspection.id_state_prospection == StateProspection.id
                    ).filter(StateProspectionProspection.id_prospection == prospection_id).all()
 
+            # Obtener notas
+            notas = session.query(
+                Note.date.label("date"),
+                Note.message.label("message"),
+                Note.id.label("note_id")
+            ).filter(Note.id_prospection == prospection_id).all()
+
+            # Construir el historial
             historial = []
 
             for vendedor in vendedor_historial:
@@ -344,6 +355,19 @@ class ProspectRepository:
                     }
                 })
 
+            for nota in notas:
+                log = f"Nota añadida: '{nota.message}'."
+                historial.append({
+                    "type": "nota",
+                    "date": nota.date.strftime('%Y-%m-%d %H:%M:%S') if nota.date else None,
+                    "log": log,
+                    "details": {
+                        "note_id": nota.note_id,
+                        "message": nota.message
+                    }
+                })
+
+            # Ordenar el historial por fecha, de más reciente a más antiguo
             historial.sort(key=lambda x: x["date"], reverse=True)
 
             return historial, 200

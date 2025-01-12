@@ -208,7 +208,7 @@ class Note(Base):
             "id": self.id,
             "id_prospection": self.id_prospection,
             "message": self.message,
-            "date": self.date.strftime('%Y-%m-%d') if self.date else None
+            "date": self.date.strftime('%Y-%m-%d %H:%M:%S') if self.date else None
         }
 
 # Table: EmailType

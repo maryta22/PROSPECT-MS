@@ -310,6 +310,12 @@ class ProspectRepository:
             ).join(StateProspection, StateProspectionProspection.id_state_prospection == StateProspection.id
                    ).filter(StateProspectionProspection.id_prospection == prospection_id).all()
 
+            notas = session.query(
+                Note.date.label("date"),
+                Note.message.label("message"),
+                Note.id.label("note_id")
+            ).filter(Note.id_prospection == prospection_id).all()
+
             historial = []
 
             for vendedor in vendedor_historial:
@@ -339,6 +345,18 @@ class ProspectRepository:
                     "details": {
                         "state_description": estado.state_description,
                         "state": estado.state
+                    }
+                })
+
+            for nota in notas:
+                log = f"Nota añadida: '{nota.message}'."
+                historial.append({
+                    "type": "nota",
+                    "date": nota.date.strftime('%Y-%m-%d %H:%M:%S') if nota.date else None,
+                    "log": log,
+                    "details": {
+                        "note_id": nota.note_id,
+                        "message": nota.message
                     }
                 })
 
@@ -390,6 +408,20 @@ class ProspectRepository:
     def create_prospection(self, prospection_data):
         session = self.Session()
         try:
+
+            # Validar si ya existe una prospección para el prospecto y programa académico específico
+            existing_prospection = session.query(Prospection).join(StateProspectionProspection).filter(
+                Prospection.id_prospect == prospection_data["prospect_id"],
+                Prospection.id_academic_program == prospection_data["academic_program_id"],
+                StateProspectionProspection.id_state_prospection != 4,
+                StateProspectionProspection.id_state_prospection != 5,
+                StateProspectionProspection.state == 1,
+            ).first()
+            if existing_prospection:
+                return {
+                    "message": "Ya existe una prospección activa con este programa académico."
+                }, 400
+
             new_prospection = Prospection(
                 id_prospect=prospection_data["prospect_id"],
                 id_academic_program=prospection_data.get("academic_program_id"),
@@ -411,13 +443,13 @@ class ProspectRepository:
             session.commit()
 
             return {
-                "message": "Prospection created successfully.",
+                "message": "Prospección creada exitosamente.",
                 "id": new_prospection.id
             }, 201
         except Exception as e:
             session.rollback()
-            logging.error(f"Error creating prospection: {e}")
-            return {"message": f"Error creating prospection: {str(e)}"}, 400
+            logging.error(f"Error creando la prospección: {e}")
+            return {"message": f"Error creando la prospección: {str(e)}"}, 400
         finally:
             session.close()
 

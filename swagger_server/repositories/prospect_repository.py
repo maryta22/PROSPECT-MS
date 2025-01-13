@@ -5,14 +5,11 @@ from dotenv import load_dotenv
 from sqlalchemy.orm import sessionmaker, joinedload
 from sqlalchemy import create_engine
 from swagger_server.database_models.models import *
-from swagger_server.services.automatic_reasig import AutomaticReasig
 
 load_dotenv()
 class ProspectRepository:
 
     def __init__(self):
-        #db_password = os.getenv('DB_PASSWORD')
-        #self.engine = create_engine(f'mysql+pymysql://root:{db_password}@localhost:3306/espae_prospections')
         self.engine = create_engine('mysql+pymysql://root:root@localhost:3306/espae_prospections')
         self.Session = sessionmaker(bind=self.engine)
 
@@ -23,9 +20,6 @@ class ProspectRepository:
                 joinedload(Prospect.user),
                 joinedload(Prospect.city)
             ).all()
-            print("antes de la prueba")
-            prueba = AutomaticReasig().get_sales_advisor_with_least_prospections(36)
-            print(prueba)
             return [prospect.to_dict() for prospect in prospects], 200
         except Exception as e:
             logging.error(f"Error retrieving prospects: {e}")
@@ -57,7 +51,6 @@ class ProspectRepository:
             session.flush()
 
             prospect_data["id_user"] = new_user.id
-            prospect_data["creation_date"] = datetime.now()  # Agregar la fecha y hora actual
             new_prospect = Prospect(**prospect_data)
             session.add(new_prospect)
             session.flush()
@@ -300,7 +293,6 @@ class ProspectRepository:
     def get_prospection_history_with_logs(self, prospection_id):
         session = self.Session()
         try:
-            # Obtener historial de vendedores
             vendedor_historial = session.query(
                 ProspectionSalesAdvisor.date.label("date"),
                 SalesAdvisor.id.label("vendedor_id"),
@@ -311,7 +303,6 @@ class ProspectRepository:
                    ).join(User, SalesAdvisor.id_user == User.id
                           ).filter(ProspectionSalesAdvisor.id_prospection == prospection_id).all()
 
-            # Obtener historial de estados
             estado_historial = session.query(
                 StateProspectionProspection.date.label("date"),
                 StateProspection.description.label("state_description"),
@@ -417,6 +408,7 @@ class ProspectRepository:
     def create_prospection(self, prospection_data):
         session = self.Session()
         try:
+
             # Validar si ya existe una prospección para el prospecto y programa académico específico
             existing_prospection = session.query(Prospection).join(StateProspectionProspection).filter(
                 Prospection.id_prospect == prospection_data["prospect_id"],
@@ -440,7 +432,6 @@ class ProspectRepository:
             session.add(new_prospection)
             session.flush()
 
-            # Agregar estado inicial
             initial_state = StateProspectionProspection(
                 id_prospection=new_prospection.id,
                 id_state_prospection=1,

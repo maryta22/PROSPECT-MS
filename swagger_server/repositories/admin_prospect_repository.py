@@ -8,12 +8,12 @@ from swagger_server.database_models.models import *
 from swagger_server.services.automatic_reasig import AutomaticReasig
 
 load_dotenv()
-class ProspectRepository:
+class AdminProspectRepository:
 
     def __init__(self):
-        #db_password = os.getenv('DB_PASSWORD')
-        #self.engine = create_engine(f'mysql+pymysql://root:{db_password}@localhost:3306/espae_prospections')
-        self.engine = create_engine('mysql+pymysql://root:root@localhost:3306/espae_prospections')
+        db_password = os.getenv('DB_PASSWORD')
+        self.engine = create_engine(f'mysql+pymysql://root:{db_password}@localhost:3306/espae_prospections')
+        #self.engine = create_engine('mysql+pymysql://root:root@localhost:3306/espae_prospections')
         self.Session = sessionmaker(bind=self.engine)
 
     def get_all_prospects(self):
@@ -319,12 +319,14 @@ class ProspectRepository:
             ).join(StateProspection, StateProspectionProspection.id_state_prospection == StateProspection.id
                    ).filter(StateProspectionProspection.id_prospection == prospection_id).all()
 
+            # Obtener notas
             notas = session.query(
                 Note.date.label("date"),
                 Note.message.label("message"),
                 Note.id.label("note_id")
             ).filter(Note.id_prospection == prospection_id).all()
 
+            # Construir el historial
             historial = []
 
             for vendedor in vendedor_historial:
@@ -369,6 +371,7 @@ class ProspectRepository:
                     }
                 })
 
+            # Ordenar el historial por fecha, de más reciente a más antiguo
             historial.sort(key=lambda x: x["date"], reverse=True)
 
             return historial, 200
@@ -425,11 +428,13 @@ class ProspectRepository:
                 StateProspectionProspection.id_state_prospection != 5,
                 StateProspectionProspection.state == 1,
             ).first()
+
             if existing_prospection:
                 return {
                     "message": "Ya existe una prospección activa con este programa académico."
                 }, 400
 
+            # Crear nueva prospección
             new_prospection = Prospection(
                 id_prospect=prospection_data["prospect_id"],
                 id_academic_program=prospection_data.get("academic_program_id"),

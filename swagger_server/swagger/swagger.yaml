@@ -6,7 +6,263 @@ info:
 servers:
 - url: http://localhost:8081
   description: Local server
+
+
 paths:
+  /admin/prospects:
+    get:
+      tags:
+      - Admin Prospects
+      summary: Retrieve all prospects (admin view)
+      operationId: admin_prospects_get
+      responses:
+        "200":
+          description: List of prospects with user data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProspectWithUser'
+        "500":
+          description: Server error
+      x-openapi-router-controller: swagger_server.controllers.admin_prospects_controller
+  
+    
+    post:
+      tags:
+      - Admin Prospects
+      summary: Create a prospect and its associated user (admin)
+      operationId: admin_prospects_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProspectRequest'
+        required: true
+      responses:
+        "201":
+          description: Prospect and user created successfully
+        "400":
+          description: Invalid input data
+      x-openapi-router-controller: swagger_server.controllers.admin_prospects_controller
+
+  /admin/prospects/{id}:
+    get:
+      tags:
+      - Admin Prospects
+      summary: Retrieve a prospect by ID (admin view)
+      operationId: admin_prospects_id_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Prospect found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProspectWithUser'
+        "404":
+          description: Prospect not found
+      x-openapi-router-controller: swagger_server.controllers.admin_prospects_controller
+
+    patch:
+      tags:
+      - Admin Prospects
+      summary: Update a prospect (admin)
+      operationId: admin_prospects_id_patch
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProspectUpdate'
+        required: true
+      responses:
+        "200":
+          description: Prospect updated successfully
+        "404":
+          description: Prospect not found
+      x-openapi-router-controller: swagger_server.controllers.admin_prospects_controller
+
+    delete:
+      tags:
+      - Admin Prospects
+      summary: Delete a prospect (admin)
+      operationId: admin_prospects_id_delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Prospect deleted successfully
+        "404":
+          description: Prospect not found
+      x-openapi-router-controller: swagger_server.controllers.admin_prospects_controller
+
+  /admin/prospects/sales-advisor/{advisor_id}:
+    get:
+      tags:
+      - Admin Prospects
+      summary: Get prospects by sales advisor ID
+      operationId: admin_prospects_sales_advisor_advisor_id_get
+      parameters:
+      - name: advisor_id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: ID of the sales advisor
+      responses:
+        "200":
+          description: List of prospects assigned to sales advisor
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProspectWithUser'
+        "404":
+          description: Sales advisor not found
+        "500":
+          description: Server error
+      x-openapi-router-controller: swagger_server.controllers.admin_prospects_controller
+
+  /admin/prospections:
+    get:
+      tags:
+      - Admin Prospections
+      summary: Retrieve all prospections (admin view)
+      operationId: admin_prospections_get
+      responses:
+        "200":
+          description: List of prospections
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Prospection'
+      x-openapi-router-controller: swagger_server.controllers.admin_prospections_controller
+
+    post:
+      tags:
+      - Admin Prospections
+      summary: Create a prospection (admin)
+      operationId: admin_prospections_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProspectionRequest'
+        required: true
+      responses:
+        "201":
+          description: Prospection created successfully
+        "400":
+          description: Invalid input data
+      x-openapi-router-controller: swagger_server.controllers.admin_prospections_controller
+
+  /admin/prospections/{id}:
+    get:
+      tags:
+      - Admin Prospections
+      summary: Retrieve a prospection by ID (admin view)
+      operationId: admin_prospections_id_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Prospection found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prospection'
+        "404":
+          description: Prospection not found
+      x-openapi-router-controller: swagger_server.controllers.admin_prospections_controller
+
+    patch:
+      tags:
+      - Admin Prospections
+      summary: Update a prospection (admin)
+      operationId: admin_prospections_id_patch
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProspectionRequest'
+        required: true
+      responses:
+        "200":
+          description: Prospection updated successfully
+        "404":
+          description: Prospection not found
+      x-openapi-router-controller: swagger_server.controllers.admin_prospections_controller
+
+    delete:
+      tags:
+      - Admin Prospections
+      summary: Delete a prospection (admin)
+      operationId: admin_prospections_id_delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Prospection deleted successfully
+        "404":
+          description: Prospection not found
+      x-openapi-router-controller: swagger_server.controllers.admin_prospections_controller
+
+  /admin/prospections/{id}/history:
+    get:
+      tags:
+      - Admin Prospections
+      summary: Retrieve prospection history (admin view)
+      operationId: admin_prospections_id_history_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: History of the prospection
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HistoryLog'
+      x-openapi-router-controller: swagger_server.controllers.admin_prospections_controller
+
   /prospects:
     get:
       tags:

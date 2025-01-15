@@ -6,8 +6,6 @@ info:
 servers:
 - url: http://localhost:8081
   description: Local server
-
-
 paths:
   /admin/prospects:
     get:
@@ -24,11 +22,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProspectWithUser'
+                x-content-type: application/json
         "500":
           description: Server error
       x-openapi-router-controller: swagger_server.controllers.admin_prospects_controller
-  
-    
     post:
       tags:
       - Admin Prospects
@@ -46,7 +43,6 @@ paths:
         "400":
           description: Invalid input data
       x-openapi-router-controller: swagger_server.controllers.admin_prospects_controller
-
   /admin/prospects/{id}:
     get:
       tags:
@@ -57,6 +53,8 @@ paths:
       - name: id
         in: path
         required: true
+        style: simple
+        explode: false
         schema:
           type: integer
       responses:
@@ -69,7 +67,25 @@ paths:
         "404":
           description: Prospect not found
       x-openapi-router-controller: swagger_server.controllers.admin_prospects_controller
-
+    delete:
+      tags:
+      - Admin Prospects
+      summary: Delete a prospect (admin)
+      operationId: admin_prospects_id_delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Prospect deleted successfully
+        "404":
+          description: Prospect not found
+      x-openapi-router-controller: swagger_server.controllers.admin_prospects_controller
     patch:
       tags:
       - Admin Prospects
@@ -79,6 +95,8 @@ paths:
       - name: id
         in: path
         required: true
+        style: simple
+        explode: false
         schema:
           type: integer
       requestBody:
@@ -93,25 +111,6 @@ paths:
         "404":
           description: Prospect not found
       x-openapi-router-controller: swagger_server.controllers.admin_prospects_controller
-
-    delete:
-      tags:
-      - Admin Prospects
-      summary: Delete a prospect (admin)
-      operationId: admin_prospects_id_delete
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-      responses:
-        "204":
-          description: Prospect deleted successfully
-        "404":
-          description: Prospect not found
-      x-openapi-router-controller: swagger_server.controllers.admin_prospects_controller
-
   /admin/prospects/sales-advisor/{advisor_id}:
     get:
       tags:
@@ -121,10 +120,12 @@ paths:
       parameters:
       - name: advisor_id
         in: path
+        description: ID of the sales advisor
         required: true
+        style: simple
+        explode: false
         schema:
           type: integer
-        description: ID of the sales advisor
       responses:
         "200":
           description: List of prospects assigned to sales advisor
@@ -134,12 +135,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProspectWithUser'
+                x-content-type: application/json
         "404":
           description: Sales advisor not found
         "500":
           description: Server error
       x-openapi-router-controller: swagger_server.controllers.admin_prospects_controller
-
   /admin/prospections:
     get:
       tags:
@@ -155,8 +156,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Prospection'
+                x-content-type: application/json
       x-openapi-router-controller: swagger_server.controllers.admin_prospections_controller
-
     post:
       tags:
       - Admin Prospections
@@ -174,7 +175,6 @@ paths:
         "400":
           description: Invalid input data
       x-openapi-router-controller: swagger_server.controllers.admin_prospections_controller
-
   /admin/prospections/{id}:
     get:
       tags:
@@ -185,6 +185,8 @@ paths:
       - name: id
         in: path
         required: true
+        style: simple
+        explode: false
         schema:
           type: integer
       responses:
@@ -197,7 +199,25 @@ paths:
         "404":
           description: Prospection not found
       x-openapi-router-controller: swagger_server.controllers.admin_prospections_controller
-
+    delete:
+      tags:
+      - Admin Prospections
+      summary: Delete a prospection (admin)
+      operationId: admin_prospections_id_delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Prospection deleted successfully
+        "404":
+          description: Prospection not found
+      x-openapi-router-controller: swagger_server.controllers.admin_prospections_controller
     patch:
       tags:
       - Admin Prospections
@@ -207,6 +227,8 @@ paths:
       - name: id
         in: path
         required: true
+        style: simple
+        explode: false
         schema:
           type: integer
       requestBody:
@@ -221,25 +243,6 @@ paths:
         "404":
           description: Prospection not found
       x-openapi-router-controller: swagger_server.controllers.admin_prospections_controller
-
-    delete:
-      tags:
-      - Admin Prospections
-      summary: Delete a prospection (admin)
-      operationId: admin_prospections_id_delete
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-      responses:
-        "204":
-          description: Prospection deleted successfully
-        "404":
-          description: Prospection not found
-      x-openapi-router-controller: swagger_server.controllers.admin_prospections_controller
-
   /admin/prospections/{id}/history:
     get:
       tags:
@@ -250,6 +253,8 @@ paths:
       - name: id
         in: path
         required: true
+        style: simple
+        explode: false
         schema:
           type: integer
       responses:
@@ -261,8 +266,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/HistoryLog'
+                x-content-type: application/json
       x-openapi-router-controller: swagger_server.controllers.admin_prospections_controller
-
   /prospects:
     get:
       tags:
@@ -498,6 +503,36 @@ paths:
         "404":
           description: Prospection not found or no notes available
       x-openapi-router-controller: swagger_server.controllers.notes_controller
+  /prospections/sales-advisor/{advisor_id}:
+    get:
+      tags:
+      - Prospections
+      summary: Retrieve prospections by sales advisor ID
+      operationId: prospections_sales_advisor_id_get
+      parameters:
+      - name: advisor_id
+        in: path
+        description: ID of the sales advisor
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: List of prospections assigned to the sales advisor
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Prospection'
+                x-content-type: application/json
+        "404":
+          description: Sales advisor not found or no prospections available
+        "500":
+          description: Server error
+      x-openapi-router-controller: swagger_server.controllers.prospections_controller
   /notes:
     post:
       tags:

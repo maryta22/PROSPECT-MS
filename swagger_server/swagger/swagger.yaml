@@ -111,6 +111,33 @@ paths:
         "404":
           description: Prospect not found
       x-openapi-router-controller: swagger_server.controllers.admin_prospects_controller
+  /admin/prospects/{id}/prospections:
+    get:
+      tags:
+      - Admin Prospects
+      summary: Retrieve all prospections for a specific prospect (admin view)
+      operationId: admin_prospects_id_prospections_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: List of prospections for the given prospect
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Prospection'
+                x-content-type: application/json
+        "404":
+          description: Prospect not found or no prospections available
+      x-openapi-router-controller: swagger_server.controllers.admin_prospects_controller
   /admin/prospects/sales-advisor/{advisor_id}:
     get:
       tags:

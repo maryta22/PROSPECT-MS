@@ -64,3 +64,6 @@ def admin_prospects_post():  # noqa: E501
 def admin_prospects_sales_advisor_advisor_id_get(advisor_id):  # noqa: E501
     return prospect_repository.get_prospects_by_sales_advisor_id(advisor_id)
 
+def admin_prospects_id_prospections_get(id_):  # noqa: E501
+    return prospect_repository.get_prospections_by_prospect_id(id_)
+

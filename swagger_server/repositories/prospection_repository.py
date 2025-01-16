@@ -201,7 +201,8 @@ class ProspectionRepository:
                 Prospect.id.label("prospect_id"),
                 Prospect.company.label("company"),
                 Prospect.id_number.label("cedula"),
-                StateProspection.description.label("prospection_state")  # Estado del prospecto
+                StateProspection.description.label("prospection_state"),  # Estado del prospecto
+                SalesAdvisor.id.label("sales_advisor_id")  # ID del vendedor
             ).join(
                 Prospect, Prospection.id_prospect == Prospect.id
             ).outerjoin(
@@ -210,6 +211,10 @@ class ProspectionRepository:
                 StateProspectionProspection, StateProspectionProspection.id_prospection == Prospection.id
             ).outerjoin(
                 StateProspection, StateProspectionProspection.id_state_prospection == StateProspection.id
+            ).outerjoin(
+                ProspectionSalesAdvisor, Prospection.id == ProspectionSalesAdvisor.id_prospection
+            ).outerjoin(
+                SalesAdvisor, ProspectionSalesAdvisor.id_sales_advisor == SalesAdvisor.id
             ).filter(
                 Prospection.id_prospect == prospect_id,
                 StateProspectionProspection.state == 1  # Asegurarse de obtener el estado activo
@@ -230,7 +235,8 @@ class ProspectionRepository:
                     "prospect_id": row.prospect_id,
                     "company": row.company,
                     "cedula": row.cedula,
-                    "prospection_state": row.prospection_state  # Añadir el estado del prospecto
+                    "prospection_state": row.prospection_state,  # Añadir el estado del prospecto
+                    "sales_advisor_id": row.sales_advisor_id  # Añadir el ID del vendedor
                 }
                 for row in prospections
             ]
@@ -311,7 +317,7 @@ class ProspectionRepository:
                     }
                 })
 
-            historial.sort(key=lambda x: x["date"], reverse=True)
+            historial.sort(key=lambda x: x["date"] or "", reverse=True)
 
             return historial, 200
         except Exception as e:
@@ -319,6 +325,7 @@ class ProspectionRepository:
             return {"message": f"Error retrieving history: {str(e)}"}, 500
         finally:
             session.close()
+
 
     def get_state_prospections(self):
         session = self.Session()

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Date
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -56,8 +56,8 @@ class Administrator(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     id_user = Column(Integer, ForeignKey('user.id'), nullable=False)
     state = Column(Integer, nullable=False)
-    creation_date = Column(Date, nullable=False)
-    modification_date = Column(Date, nullable=True)
+    creation_date = Column(DateTime, nullable=False)
+    modification_date = Column(DateTime, nullable=True)
 
     user = relationship("User", back_populates="administrators")
 
@@ -66,8 +66,8 @@ class Administrator(Base):
             "id": self.id,
             "id_user": self.id_user,
             "state": self.state,
-            "creation_date": self.creation_date.strftime('%Y-%m-%d'),
-            "modification_date": self.modification_date.strftime('%Y-%m-%d') if self.modification_date else None
+            "creation_date": self.creation_date.strftime('%Y-%m-%d %H:%M:%S'),
+            "modification_date": self.modification_date.strftime('%Y-%m-%d %H:%M:%S') if self.modification_date else None
         }
 
 # Modelo: SalesAdvisor
@@ -109,7 +109,7 @@ class AcademicProgram(Base):
             "state": self.state,
             "sellers": [ps.sales_advisor.to_dict() for ps in self.program_sellers]
         }
-    
+
 # Table: ProgramSellers
 class ProgramSellers(Base):
     __tablename__ = 'academic_program_sales_advisor'
@@ -138,8 +138,8 @@ class Prospect(Base):
     id_user = Column(Integer, ForeignKey('user.id'), nullable=False)
     id_number = Column(String(10), unique=True, nullable=False)
     state = Column(Integer, nullable=False)
-    creation_date = Column(Date, nullable=False)
-    modification_date = Column(Date, nullable=True)
+    creation_date = Column(DateTime, nullable=False)
+    modification_date = Column(DateTime, nullable=True)
     company = Column(String(255), nullable=True)
     id_city = Column(Integer, ForeignKey('city.id'), nullable=True)
     degree = Column(String(255), nullable=True)
@@ -169,7 +169,7 @@ class Prospection(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     id_academic_program = Column(Integer, ForeignKey('academic_program.id'), nullable=False)
     id_prospect = Column(Integer, ForeignKey('prospect.id'), nullable=False)
-    date = Column(Date, nullable=False)
+    date = Column(DateTime, nullable=False)
     state = Column(Integer, nullable=False)
     channel = Column(String(255), nullable=True)  # Agregamos la columna channel
 
@@ -189,7 +189,7 @@ class Prospection(Base):
             "id": self.id,
             "id_academic_program": self.id_academic_program,
             "id_prospect": self.id_prospect,
-            "date": self.date.strftime('%Y-%m-%d') if self.date else None,
+            "date": self.date.strftime('%Y-%m-%d %H:%M:%S') if self.date else None,
             "state": self.state,
             "channel": self.channel
         }
@@ -202,7 +202,7 @@ class ProspectionSalesAdvisor(Base):
     id_sales_advisor = Column(Integer, ForeignKey('sales_advisor.id'), nullable=False)
     id_prospection = Column(Integer, ForeignKey('prospection.id'), nullable=False)
     state = Column(Integer, nullable=False)
-    date = Column(Date, nullable=False)
+    date = Column(DateTime, nullable=False)
 
     sales_advisor = relationship("SalesAdvisor", back_populates="prospections")
     prospection = relationship("Prospection", back_populates="sales_advisors")
@@ -213,7 +213,7 @@ class ProspectionSalesAdvisor(Base):
             "id_sales_advisor": self.id_sales_advisor,
             "id_prospection": self.id_prospection,
             "state": self.state,
-            "date": self.date.strftime('%Y-%m-%d') if self.date else None
+            "date": self.date.strftime('%Y-%m-%d %H:%M:%S') if self.date else None
         }
 
 # Table: Note
@@ -223,7 +223,7 @@ class Note(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     id_prospection = Column(Integer, ForeignKey('prospection.id'), nullable=False)
     message = Column(String(200), nullable=False)
-    date = Column(Date, nullable=False)
+    date = Column(DateTime, nullable=False)
 
     prospection = relationship("Prospection", back_populates="notes")
 
@@ -259,7 +259,7 @@ class Email(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     sender = Column(String(50), nullable=False)
     message = Column(String(200), nullable=False)
-    date = Column(Date, nullable=False)
+    date = Column(DateTime, nullable=False)
     platform_id = Column(String(50), nullable=True)
     id_email_type = Column(Integer, ForeignKey('email_type.id'), nullable=False)
 
@@ -270,7 +270,7 @@ class Email(Base):
             "id": self.id,
             "sender": self.sender,
             "message": self.message,
-            "date": self.date.strftime('%Y-%m-%d') if self.date else None,
+            "date": self.date.strftime('%Y-%m-%d %H:%M:%S') if self.date else None,
             "platform_id": self.platform_id,
             "email_type": self.email_type.to_dict() if self.email_type else None
         }
@@ -300,20 +300,18 @@ class StateProspectionProspection(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     id_prospection = Column(Integer, ForeignKey('prospection.id'), nullable=False)
     id_state_prospection = Column(Integer, ForeignKey('state_prospection.id'), nullable=False)
-    date = Column(Date, nullable=False)
+    date = Column(DateTime, nullable=False)
     state = Column(Integer, nullable=False)
 
-    # Relaciones
     prospection = relationship('Prospection', back_populates='state_prospections')
     state_prospection = relationship('StateProspection', back_populates='prospection_states')
 
     def to_dict(self):
-        """Convierte el modelo en un diccionario para facilitar la serialización."""
         return {
             "id": self.id,
             "id_prospection": self.id_prospection,
             "id_state_prospection": self.id_state_prospection,
-            "date": self.date.strftime('%Y-%m-%d') if self.date else None,
+            "date": self.date.strftime('%Y-%m-%d %H:%M:%S') if self.date else None,
             "state": self.state
         }
 
@@ -323,7 +321,6 @@ class City(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)
 
-    # Relación con Prospect
     prospects = relationship("Prospect", back_populates="city")
 
     def to_dict(self):

@@ -854,6 +854,16 @@ components:
         channel:
           type: string
           description: Channel used for the prospection
+        sales_advisor_id:
+          type: integer
+          description: ID of the sales advisor
+      example:
+        academic_program_id: 1
+        prospect_id: 10
+        date: 2024-01-01
+        state: 1
+        channel: Social Media
+        sales_advisor_id: 5
     Note:
       type: object
       properties:

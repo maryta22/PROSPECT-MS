@@ -26,6 +26,7 @@ def prospections_post():  # noqa: E501
     if request.is_json:
         try:
             data = request.get_json()
+            print(data)
 
             response, status = prospection_repository.create_prospection(data)
             return jsonify(response), status

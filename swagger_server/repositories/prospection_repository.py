@@ -47,7 +47,7 @@ class ProspectionRepository:
                     "cedula": row.cedula,
                     "company": row.company,
                     "state": row.state,
-                    "date": row.date.strftime('%Y-%m-%d') if row.date else None,
+                    "date": row.date.strftime('%Y-%m-%d %H:%M:%S') if row.date else None,
                     "program": row.program,
                     "channel": row.channel,
                     "prospection_state": row.prospection_state
@@ -98,20 +98,19 @@ class ProspectionRepository:
     def create_prospection(self, prospection_data):
         session = self.Session()
         try:
-
-            # Validar si ya existe una prospección para el prospecto y programa académico específico
+            # Validar si ya existe una prospección activa para el prospecto y programa académico específico
             existing_prospection = session.query(Prospection).join(StateProspectionProspection).filter(
                 Prospection.id_prospect == prospection_data["prospect_id"],
                 Prospection.id_academic_program == prospection_data["academic_program_id"],
-                StateProspectionProspection.id_state_prospection != 4,
-                StateProspectionProspection.id_state_prospection != 5,
-                StateProspectionProspection.state == 1,
+                StateProspectionProspection.id_state_prospection.notin_([4, 5]),  # Excluir estados específicos
+                StateProspectionProspection.state == 1,  # Estado activo
             ).first()
             if existing_prospection:
                 return {
                     "message": "Ya existe una prospección activa con este programa académico."
                 }, 400
 
+            # Crear la nueva prospección
             new_prospection = Prospection(
                 id_prospect=prospection_data["prospect_id"],
                 id_academic_program=prospection_data.get("academic_program_id"),
@@ -122,14 +121,29 @@ class ProspectionRepository:
             session.add(new_prospection)
             session.flush()
 
+            # Crear el estado inicial de la prospección
             initial_state = StateProspectionProspection(
                 id_prospection=new_prospection.id,
-                id_state_prospection=1,
+                id_state_prospection=1,  # Estado inicial
                 date=datetime.now(),
                 state=1
             )
             session.add(initial_state)
+            print("prospeccion creada")
 
+            # Si se proporciona un ID de vendedor, asociarlo a la prospección
+            sales_advisor_id = prospection_data.get("sales_advisor_id")
+            print(sales_advisor_id)
+            if sales_advisor_id:
+                prospection_sales_advisor = ProspectionSalesAdvisor(
+                    id_prospection=new_prospection.id,
+                    id_sales_advisor=sales_advisor_id,
+                    state=1,  # Estado activo
+                    date=datetime.now()
+                )
+                session.add(prospection_sales_advisor)
+
+            # Confirmar los cambios
             session.commit()
 
             return {
@@ -174,7 +188,7 @@ class ProspectionRepository:
                     "cedula": row.cedula,
                     "company": row.company,
                     "state": row.state,
-                    "date": row.date.strftime('%Y-%m-%d') if row.date else None,
+                    "date": row.date.strftime('%Y-%m-%d %H:%M:%S') if row.date else None,
                     "program": row.program,
                     "channel": row.channel,
                     "prospection_state": row.prospection_state
@@ -228,7 +242,7 @@ class ProspectionRepository:
             result = [
                 {
                     "id": row.id,
-                    "date": row.date.strftime('%Y-%m-%d') if row.date else None,
+                    "date": row.date.strftime('%Y-%m-%d %H:%M:%S') if row.date else None,
                     "state": row.state,
                     "channel": row.channel,
                     "program": row.program,
@@ -455,7 +469,7 @@ class ProspectionRepository:
                     "cedula": row.cedula,
                     "company": row.company,
                     "state": row.state,
-                    "date": row.date.strftime('%Y-%m-%d') if row.date else None,
+                    "date": row.date.strftime('%Y-%m-%d %H:%M:%S') if row.date else None,
                     "program": row.program,
                     "channel": row.channel,
                     "prospection_state": row.prospection_state

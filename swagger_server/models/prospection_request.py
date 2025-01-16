@@ -14,7 +14,7 @@ class ProspectionRequest(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, academic_program_id: int=None, prospect_id: int=None, _date: date=None, state: int=None, channel: str=None):  # noqa: E501
+    def __init__(self, academic_program_id: int=None, prospect_id: int=None, _date: date=None, state: int=None, channel: str=None, sales_advisor_id: int=None):  # noqa: E501
         """ProspectionRequest - a model defined in Swagger
 
         :param academic_program_id: The academic_program_id of this ProspectionRequest.  # noqa: E501
@@ -27,13 +27,16 @@ class ProspectionRequest(Model):
         :type state: int
         :param channel: The channel of this ProspectionRequest.  # noqa: E501
         :type channel: str
+        :param sales_advisor_id: The sales_advisor_id of this ProspectionRequest.  # noqa: E501
+        :type sales_advisor_id: int
         """
         self.swagger_types = {
             'academic_program_id': int,
             'prospect_id': int,
             '_date': date,
             'state': int,
-            'channel': str
+            'channel': str,
+            'sales_advisor_id': int
         }
 
         self.attribute_map = {
@@ -41,13 +44,15 @@ class ProspectionRequest(Model):
             'prospect_id': 'prospect_id',
             '_date': 'date',
             'state': 'state',
-            'channel': 'channel'
+            'channel': 'channel',
+            'sales_advisor_id': 'sales_advisor_id'
         }
         self._academic_program_id = academic_program_id
         self._prospect_id = prospect_id
         self.__date = _date
         self._state = state
         self._channel = channel
+        self._sales_advisor_id = sales_advisor_id
 
     @classmethod
     def from_dict(cls, dikt) -> 'ProspectionRequest':
@@ -166,3 +171,26 @@ class ProspectionRequest(Model):
         """
 
         self._channel = channel
+
+    @property
+    def sales_advisor_id(self) -> int:
+        """Gets the sales_advisor_id of this ProspectionRequest.
+
+        ID of the sales advisor  # noqa: E501
+
+        :return: The sales_advisor_id of this ProspectionRequest.
+        :rtype: int
+        """
+        return self._sales_advisor_id
+
+    @sales_advisor_id.setter
+    def sales_advisor_id(self, sales_advisor_id: int):
+        """Sets the sales_advisor_id of this ProspectionRequest.
+
+        ID of the sales advisor  # noqa: E501
+
+        :param sales_advisor_id: The sales_advisor_id of this ProspectionRequest.
+        :type sales_advisor_id: int
+        """
+
+        self._sales_advisor_id = sales_advisor_id

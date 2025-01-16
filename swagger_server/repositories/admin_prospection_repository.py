@@ -19,7 +19,6 @@ class AdminProspectionRepository:
     def __init__(self):
         db_password = os.getenv('DB_PASSWORD')
         self.engine = create_engine(f'mysql+pymysql://root:{db_password}@localhost:3306/espae_prospections')
-        #self.engine = create_engine('mysql+pymysql://root:root@localhost:3306/espae_prospections')
         self.Session = sessionmaker(bind=self.engine)
 
     def get_all_prospections(self):

@@ -17,50 +17,6 @@ class ProspectionRepository:
         self.engine = create_engine(f'mysql+pymysql://root:{db_password}@localhost:3306/espae_prospections')
         self.Session = sessionmaker(bind=self.engine)
 
-    def get_all_prospections(self):
-        session = self.Session()
-        try:
-            prospections = session.query(
-                Prospection.id.label("id"),
-                Prospection.prospect_id.label("prospect_id"),
-                Prospect.id_number.label("cedula"),
-                Prospect.company.label("company"),
-                Prospection.state.label("state"),
-                Prospection._date.label("date"),
-                AcademicProgram.name.label("program"),
-                Prospection.channel.label("channel"),
-                StateProspection.description.label("prospection_state")
-            ).join(Prospect, Prospection.prospect_id == Prospect.id
-            ).join(AcademicProgram, Prospection.program == AcademicProgram.id
-            ).outerjoin(
-                StateProspectionProspection,
-                StateProspectionProspection.id_prospection == Prospection.id
-            ).outerjoin(
-                StateProspection,
-                StateProspectionProspection.id_state_prospection == StateProspection.id
-            ).filter(StateProspectionProspection.state == 1).all()
-
-            result = [
-                {
-                    "id": row.id,
-                    "prospect_id": row.prospect_id,
-                    "cedula": row.cedula,
-                    "company": row.company,
-                    "state": row.state,
-                    "date": row.date.strftime('%Y-%m-%d %H:%M:%S') if row.date else None,
-                    "program": row.program,
-                    "channel": row.channel,
-                    "prospection_state": row.prospection_state
-                }
-                for row in prospections
-            ]
-            return result, 200
-        except Exception as e:
-            logging.error(f"Error retrieving prospections: {e}")
-            return {"message": f"Error retrieving prospections: {str(e)}"}, 500
-        finally:
-            session.close()
-
     def get_notes_by_prospection_id(self, prospection_id):
         session = self.Session()
         try:
@@ -169,7 +125,8 @@ class ProspectionRepository:
                 Prospection.date.label("date"),
                 AcademicProgram.name.label("program"),
                 Prospection.channel.label("channel"),
-                StateProspection.description.label("prospection_state")  # Estado de gestión actual
+                StateProspection.description.label("prospection_state"),
+                StateProspection.id.label("prospection_state_id"),
             ).join(Prospect, Prospection.id_prospect == Prospect.id
                    ).join(AcademicProgram, Prospection.id_academic_program == AcademicProgram.id
                           ).outerjoin(
@@ -191,7 +148,8 @@ class ProspectionRepository:
                     "date": row.date.strftime('%Y-%m-%d %H:%M:%S') if row.date else None,
                     "program": row.program,
                     "channel": row.channel,
-                    "prospection_state": row.prospection_state
+                    "prospection_state": row.prospection_state,
+                    "prospection_state_id": row.prospection_state_id,
                 }
                 for row in prospections
             ]
@@ -216,7 +174,8 @@ class ProspectionRepository:
                 Prospect.company.label("company"),
                 Prospect.id_number.label("cedula"),
                 StateProspection.description.label("prospection_state"),  # Estado del prospecto
-                SalesAdvisor.id.label("sales_advisor_id")  # ID del vendedor
+                StateProspection.id.label("prospection_state_id"),
+                SalesAdvisor.id.label("sales_advisor_id"),
             ).join(
                 Prospect, Prospection.id_prospect == Prospect.id
             ).outerjoin(
@@ -250,7 +209,8 @@ class ProspectionRepository:
                     "company": row.company,
                     "cedula": row.cedula,
                     "prospection_state": row.prospection_state,  # Añadir el estado del prospecto
-                    "sales_advisor_id": row.sales_advisor_id  # Añadir el ID del vendedor
+                    "sales_advisor_id": row.sales_advisor_id,  # Añadir el ID del vendedor
+                    "prospection_state_id": row.prospection_state_id,
                 }
                 for row in prospections
             ]
@@ -437,13 +397,19 @@ class ProspectionRepository:
                 Prospection.date.label("date"),
                 AcademicProgram.name.label("program"),
                 Prospection.channel.label("channel"),
-                StateProspection.description.label("prospection_state")  # Estado actual de la prospección
+                SalesAdvisor.id.label("sales_advisor_id"),
+                StateProspection.description.label("prospection_state"),
+                StateProspection.id.label("prospection_state_id"),
+                User.first_name.label("first_name"),  # Nombre del prospecto
+                User.last_name.label("last_name"),  # Apellido del prospecto
             ).join(
                 ProspectionSalesAdvisor, Prospection.id == ProspectionSalesAdvisor.id_prospection
             ).join(
                 SalesAdvisor, ProspectionSalesAdvisor.id_sales_advisor == SalesAdvisor.id
             ).join(
                 Prospect, Prospection.id_prospect == Prospect.id
+            ).join(
+                User, Prospect.id_user == User.id  # Relación con User para obtener nombres
             ).join(
                 AcademicProgram, Prospection.id_academic_program == AcademicProgram.id
             ).outerjoin(
@@ -471,7 +437,9 @@ class ProspectionRepository:
                     "date": row.date.strftime('%Y-%m-%d %H:%M:%S') if row.date else None,
                     "program": row.program,
                     "channel": row.channel,
-                    "prospection_state": row.prospection_state
+                    "prospection_state": row.prospection_state,
+                    "prospection_state_id": row.prospection_state_id,
+                    "prospect_name": f"{row.first_name} {row.last_name}"  # Nombre completo
                 }
                 for row in prospections
             ]

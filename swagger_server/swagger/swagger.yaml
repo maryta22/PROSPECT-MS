@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: PROSPECTS-MS
-  description: API to manage prospects and prospections.
+  description: Api para gestionar prospectos, prospecciones y diccionarios
   version: 1.0.0
 servers:
 - url: http://localhost:8081

@@ -47,10 +47,19 @@ class ProspectRepository:
     def create_prospect(self, user_data, prospect_data):
         session = self.Session()
         try:
+            existing_prospect = session.query(Prospect).filter_by(id_number=prospect_data.get("id_number")).first()
+            if existing_prospect:
+                return {
+                    "message": "Ya existe un prospecto con ese numero de cedula",
+                    "id": existing_prospect.id,
+                }, 400
+
+            # Crear un nuevo usuario
             new_user = User(**user_data)
             session.add(new_user)
             session.flush()
 
+            # Crear un nuevo prospecto asociado al usuario
             prospect_data["id_user"] = new_user.id
             new_prospect = Prospect(**prospect_data)
             session.add(new_prospect)

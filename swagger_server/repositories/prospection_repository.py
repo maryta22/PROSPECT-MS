@@ -291,8 +291,7 @@ class ProspectionRepository:
 
             for vendedor in vendedor_historial:
                 log = (
-                    f"Vendedor asignado a {vendedor.vendedor_first_name} {vendedor.vendedor_last_name} "
-                    f"con estado {'activo' if vendedor.state else 'inactivo'}."
+                    f"Asignado a {vendedor.vendedor_first_name} {vendedor.vendedor_last_name} "
                 )
                 historial.append({
                     "type": "vendedor",

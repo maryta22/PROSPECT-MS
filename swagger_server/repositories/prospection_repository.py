@@ -58,7 +58,7 @@ class ProspectionRepository:
             existing_prospection = session.query(Prospection).join(StateProspectionProspection).filter(
                 Prospection.id_prospect == prospection_data["prospect_id"],
                 Prospection.id_academic_program == prospection_data["academic_program_id"],
-                StateProspectionProspection.id_state_prospection.notin_([4, 5]),  # Excluir estados específicos
+                StateProspectionProspection.id_state_prospection.notin_([4, 7]),  # Excluir estados específicos
                 StateProspectionProspection.state == 1,  # Estado activo
             ).first()
             if existing_prospection:
@@ -87,8 +87,10 @@ class ProspectionRepository:
             session.add(initial_state)
             print("prospeccion creada")
 
+
             # Si se proporciona un ID de vendedor, asociarlo a la prospección
             sales_advisor_id = prospection_data.get("sales_advisor_id")
+            print(sales_advisor_id)
             print(sales_advisor_id)
             if sales_advisor_id:
                 prospection_sales_advisor = ProspectionSalesAdvisor(
@@ -400,16 +402,16 @@ class ProspectionRepository:
                 SalesAdvisor.id.label("sales_advisor_id"),
                 StateProspection.description.label("prospection_state"),
                 StateProspection.id.label("prospection_state_id"),
-                User.first_name.label("first_name"),  # Nombre del prospecto
-                User.last_name.label("last_name"),  # Apellido del prospecto
-            ).join(
+                User.first_name.label("first_name"),
+                User.last_name.label("last_name"),
+            ).distinct().join(
                 ProspectionSalesAdvisor, Prospection.id == ProspectionSalesAdvisor.id_prospection
             ).join(
                 SalesAdvisor, ProspectionSalesAdvisor.id_sales_advisor == SalesAdvisor.id
             ).join(
                 Prospect, Prospection.id_prospect == Prospect.id
             ).join(
-                User, Prospect.id_user == User.id  # Relación con User para obtener nombres
+                User, Prospect.id_user == User.id
             ).join(
                 AcademicProgram, Prospection.id_academic_program == AcademicProgram.id
             ).outerjoin(
@@ -418,8 +420,8 @@ class ProspectionRepository:
                 StateProspection, StateProspectionProspection.id_state_prospection == StateProspection.id
             ).filter(
                 SalesAdvisor.id == sales_advisor_id,
-                ProspectionSalesAdvisor.state == 1,  # Asegurar que la relación está activa
-                StateProspectionProspection.state == 1  # Estado activo de la prospección
+                ProspectionSalesAdvisor.state == 1,
+                StateProspectionProspection.state == 1
             ).all()
 
             # Verificar si no se encontraron prospecciones

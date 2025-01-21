@@ -239,6 +239,7 @@ class AdminProspectionRepository:
                 Prospect.company.label("company"),
                 Prospection.state.label("state"),
                 Prospection.date.label("date"),
+                AcademicProgram.id.label("program_id"),
                 AcademicProgram.name.label("program"),
                 Prospection.channel.label("channel"),
                 StateProspection.description.label("prospection_state"),  # Estado de gestión actual
@@ -287,6 +288,7 @@ class AdminProspectionRepository:
                     "company": row.company,
                     "state": row.state,
                     "date": row.date.strftime('%Y-%m-%d') if row.date else None,
+                    "program_id": row.program_id,
                     "program": row.program,
                     "channel": row.channel,
                     "prospection_state": row.prospection_state,

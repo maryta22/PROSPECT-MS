@@ -22,9 +22,6 @@ class AdminProspectRepository:
                 joinedload(Prospect.user),
                 joinedload(Prospect.city)
             ).all()
-            print("antes de la prueba")
-            prueba = AutomaticReasig().get_sales_advisor_with_least_prospections(36)
-            print(prueba)
             return [prospect.to_dict() for prospect in prospects], 200
         except Exception as e:
             logging.error(f"Error retrieving prospects: {e}")
@@ -93,18 +90,16 @@ class AdminProspectRepository:
             if not user:
                 return {"message": "User associated with the prospect not found"}, 404
 
-            if "state" in clean_data:
-                prospect.state = clean_data["state"]
-            if "id_city" in clean_data:
-                prospect.id_city = clean_data["id_city"]
-            if "degree" in clean_data:
-                prospect.degree = clean_data["degree"]
-            if "company" in clean_data:
-                prospect.company = clean_data["company"]
+            # Actualizar los campos del prospecto, incluyendo explícitamente id_number
+            prospect_fields = ["state", "id_city", "degree", "company", "id_number"]
+            for field in prospect_fields:
+                if field in clean_data and clean_data[field] is not None:
+                    setattr(prospect, field, clean_data[field])
 
+            # Actualizar campos del usuario
             user_fields = ["first_name", "last_name", "email", "phone"]
             for field in user_fields:
-                if field in clean_data:
+                if field in clean_data and clean_data[field] is not None:
                     setattr(user, field, clean_data[field])
 
             session.commit()

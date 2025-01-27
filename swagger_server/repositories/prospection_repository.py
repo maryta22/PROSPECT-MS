@@ -22,12 +22,12 @@ class ProspectionRepository:
         try:
             notes = session.query(Note).filter_by(id_prospection=prospection_id).all()
             if not notes:
-                return {"message": "No notes found for this prospection"}, 404
+                return {"message": "No se encontraron notas para esta prospección"}, 404
 
             return [note.to_dict() for note in notes], 200
         except Exception as e:
-            logging.error(f"Error retrieving notes: {e}")
-            return {"message": f"Error retrieving notes: {str(e)}"}, 500
+            logging.error(f"Error al recuperar las notas: {e}")
+            return {"message": f"Error al recuperar las notas: {str(e)}"}, 500
         finally:
             session.close()
 
@@ -47,7 +47,7 @@ class ProspectionRepository:
         except Exception as e:
             logging.error(f"Error saving note: {e}")
             session.rollback()
-            return {"message": f"Error saving note: {str(e)}"}, 500
+            return {"message": f"Error al guardar la nota: {str(e)}"}, 500
         finally:
             session.close()
 
@@ -165,7 +165,7 @@ class ProspectionRepository:
     def get_prospections_by_prospect_id(self, prospect_id):
         session = self.Session()
         try:
-            # Realizar la consulta para obtener las prospecciones y el estado del prospecto
+            # Realizar la consulta para obtener las prospecciones activas y asignadas a vendedores activos
             prospections = session.query(
                 Prospection.id.label("id"),
                 Prospection.date.label("date"),
@@ -192,14 +192,15 @@ class ProspectionRepository:
                 SalesAdvisor, ProspectionSalesAdvisor.id_sales_advisor == SalesAdvisor.id
             ).filter(
                 Prospection.id_prospect == prospect_id,
-                StateProspectionProspection.state == 1  # Asegurarse de obtener el estado activo
+                StateProspectionProspection.state == 1,
+                ProspectionSalesAdvisor.state == 1
+            ).distinct(
+                Prospection.id
             ).all()
 
-            # Si no se encuentran resultados
             if not prospections:
-                return {"message": "No prospections found for this prospect."}, 404
+                return {"message": "No se encontraron prospecciones para este prospecto"}, 404
 
-            # Formatear la respuesta con los datos necesarios
             result = [
                 {
                     "id": row.id,
@@ -218,8 +219,8 @@ class ProspectionRepository:
             ]
             return result, 200
         except Exception as e:
-            logging.error(f"Error retrieving prospections for prospect {prospect_id}: {e}")
-            return {"message": f"Error retrieving prospections: {str(e)}"}, 500
+            logging.error(f"Error al recuperar las prospecciones para el prospecto {prospect_id}: {e}")
+            return {"message": f"Error al recuperar las prospecciones: {str(e)}"}, 500
         finally:
             session.close()
 
@@ -296,8 +297,8 @@ class ProspectionRepository:
 
             return historial, 200
         except Exception as e:
-            logging.error(f"Error retrieving history for prospection {prospection_id}: {e}")
-            return {"message": f"Error retrieving history: {str(e)}"}, 500
+            logging.error(f"Error al recuperar el historial de la prospección {prospection_id}: {e}")
+            return {"message": f"Error al recuperar el historial: {str(e)}"}, 500
         finally:
             session.close()
 
@@ -308,8 +309,8 @@ class ProspectionRepository:
             states = session.query(StateProspection).all()
             return [state.to_dict() for state in states], 200
         except Exception as e:
-            logging.error(f"Error retrieving state prospections: {e}")
-            return {"message": f"Error retrieving state prospections: {str(e)}"}, 500
+            logging.error(f"Error al recuperar el estado de las prospecciones: {e}")
+            return {"message": f"Error al recuperar el estado de las prospecciones: {str(e)}"}, 500
         finally:
             session.close()
 
@@ -330,11 +331,11 @@ class ProspectionRepository:
             session.add(new_state)
             session.commit()
 
-            return {"message": "Gestion state updated successfully."}, 200
+            return {"message": "Estado de gestión actualizado exitosamente."}, 200
         except Exception as e:
             session.rollback()
-            logging.error(f"Error updating gestion state: {e}")
-            return {"message": f"Error updating gestion state: {str(e)}"}, 500
+            logging.error(f"Error al actualizar el estado de gestión: {e}")
+            return {"message": f"Error al actualizar el estado de gestión: {str(e)}"}, 500
         finally:
             session.close()
 
@@ -343,18 +344,18 @@ class ProspectionRepository:
         try:
             prospection = session.query(Prospection).filter_by(id=id_).first()
             if not prospection:
-                return {"message": "Prospection not found"}, 404
+                return {"message": "Prospección no encontrada"}, 404
 
             for key, value in prospection_data.items():
                 if hasattr(prospection, key):
                     setattr(prospection, key, value)
 
             session.commit()
-            return {"message": "Prospection updated successfully."}, 200
+            return {"message": "Prospección actualizada exitosamente."}, 200
         except Exception as e:
             session.rollback()
-            logging.error(f"Error updating prospection: {e}")
-            return {"message": f"Error updating prospection: {str(e)}"}, 400
+            logging.error(f"Error al actualizar la prospección: {e}")
+            return {"message": f"Error al actualizar la prospección: {str(e)}"}, 400
         finally:
             session.close()
 
@@ -363,12 +364,12 @@ class ProspectionRepository:
         try:
             emails = session.query(Email).filter_by(id_prospection=prospection_id).all()
             if not emails:
-                return {"message": "No emails found for this prospection"}, 404
+                return {"message": "No se encontraron correos para esta prospección"}, 404
 
             return [email.to_dict() for email in emails], 200
         except Exception as e:
-            logging.error(f"Error retrieving emails: {e}")
-            return {"message": f"Error retrieving emails: {str(e)}"}, 500
+            logging.error(f"Error al recuperar los correos: {e}")
+            return {"message": f"Error al recuperar los correos: {str(e)}"}, 500
         finally:
             session.close()
 
@@ -377,12 +378,12 @@ class ProspectionRepository:
         try:
             prospection = session.query(ProspectionSalesAdvisor).filter_by(id_prospection=prospection_id).first()
             if not prospection:
-                return {"message": "No sales advisor found for this prospection"}, 404
+                return {"message": "No se encontró un asesor de ventas para esta prospección"}, 404
 
             return prospection.sales_advisor.to_dict(), 200
         except Exception as e:
-            logging.error(f"Error retrieving sales advisor: {e}")
-            return {"message": f"Error retrieving sales advisor: {str(e)}"}, 500
+            logging.error(f"Error al recuperar el asesor de ventas: {e}")
+            return {"message": f"Error al recuperar el asesor de ventas: {str(e)}"}, 500
         finally:
             session.close()
 
@@ -424,7 +425,6 @@ class ProspectionRepository:
                 StateProspectionProspection.state == 1
             ).all()
 
-            # Verificar si no se encontraron prospecciones
             if not prospections:
                 return {"message": "No se encontraron prospecciones para este asesor de ventas."}, 404
 
@@ -448,8 +448,8 @@ class ProspectionRepository:
 
             return result, 200
         except Exception as e:
-            logging.error(f"Error retrieving prospections for sales advisor {sales_advisor_id}: {e}")
-            return {"message": f"Error retrieving data: {str(e)}"}, 500
+            logging.error(f"Error al recuperar las prospecciones para el asesor de ventas {sales_advisor_id}: {e}")
+            return {"message": f"Error al recuperar los datos: {str(e)}"}, 500
         finally:
             session.close()
 

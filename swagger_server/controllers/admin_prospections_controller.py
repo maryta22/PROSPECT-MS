@@ -40,10 +40,10 @@ def admin_prospections_post():  # noqa: E501
             return jsonify(response), status
 
         except Exception as e:
-            logging.error(f"Error processing prospection creation: {e}")
-            return {"message": f"Error processing request: {str(e)}"}, 500
+            logging.error(f"Error al procesar la creación de la prospección: {e}")
+            return {"message": f"Error al procesar la solicitud: {str(e)}"}, 500
     else:
-        return {"message": "Request body must be JSON."}, 400
+        return {"message": "El cuerpo de la solicitud debe estar en formato JSON"}, 400
 
 def admin_prospections_id_patch(id_):  # noqa: E501
     """
@@ -57,10 +57,10 @@ def admin_prospections_id_patch(id_):  # noqa: E501
             return jsonify(response), status
 
         except Exception as e:
-            logging.error(f"Error updating prospection: {e}")
-            return {"message": f"Error processing request: {str(e)}"}, 500
+            logging.error(f"Error al actualizar la prospección:{e}")
+            return {"message": f"Error al procesar la solicitud: {str(e)}"}, 500
     else:
-        return {"message": "Request body must be JSON."}, 400
+        return {"message": "El formato de la solicitud debe estar en formato JSON."}, 400
 
 def admin_prospects_id_prospections_get(id_):  # noqa: E501
     return prospection_repository.get_prospections_by_prospect_id(id_)
@@ -79,7 +79,7 @@ def admin_prospections_id_state_patch(id_):  # noqa: E501
             return jsonify(response), status
 
         except Exception as e:
-            logging.error(f"Error updating prospection: {e}")
-            return {"message": f"Error processing request: {str(e)}"}, 500
+            logging.error(f"Error al actualizar la prospección: {e}")
+            return {"message": f"Error al procesar la solicitud: {str(e)}"}, 500
     else:
-        return {"message": "Request body must be JSON."}, 400
+        return {"message": "El formato de la solicitud debe estar en formato JSON."}, 400

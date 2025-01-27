@@ -19,16 +19,16 @@ def prospects_id_patch(body, id_):  # noqa: E501
     if request.is_json:
         try:
             raw_data = request.get_json()
-            logging.info(f"Data received to update prospect: {raw_data}")
+            logging.info(f"Datos recibidos para actualizar el prospecto: {raw_data}")
             body = ProspectUpdate.from_dict(raw_data)  # noqa: E501
             print(body)
             return prospect_repository.update_prospect(id_, body)
         except ValueError as ve:
-            logging.error(f"Validation error: {ve}")
+            logging.error(f"Error de validacion: {ve}")
             return {"message": str(ve)}, 400
         except Exception as e:
-            logging.error(f"Error processing data: {e}")
-            return {"message": f"Error processing data: {str(e)}"}, 500
+            logging.error(f"Error al procesar los datos: {e}")
+            return {"message": f"Error al procesar los datos: {str(e)}"}, 500
 
 def prospects_post():  # noqa: E501
     if request.is_json:
@@ -38,14 +38,14 @@ def prospects_post():  # noqa: E501
             prospect_data = data.get("prospect")
 
             if not user_data or not prospect_data:
-                return {"message": "User and prospect data are required."}, 400
+                return {"message": "Se requieren los datos del usuario y del prospecto."}, 400
 
             response, status = prospect_repository.create_prospect(user_data, prospect_data)
             return jsonify(response), status
 
         except Exception as e:
-            logging.error(f"Error processing request: {e}")
-            return {"message": f"Error processing request: {str(e)}"}, 500
+            logging.error(f"Error al procesar la solicitud: {e}")
+            return {"message": f"Error al procesar la solicitud: {str(e)}"}, 500
 
 def prospects_sales_advisor_advisor_id_get(advisor_id):  # noqa: E501
     return prospect_repository.get_prospects_by_sales_advisor_id(advisor_id)

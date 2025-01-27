@@ -30,11 +30,11 @@ def admin_prospects_id_patch(body, id_):  # noqa: E501
             print(body)
             return prospect_repository.update_prospect(id_, body)
         except ValueError as ve:
-            logging.error(f"Validation error: {ve}")
+            logging.error(f"Error de validacion: {ve}")
             return {"message": str(ve)}, 400
         except Exception as e:
-            logging.error(f"Error processing data: {e}")
-            return {"message": f"Error processing data: {str(e)}"}, 500
+            logging.error(f"Error al procesar los datos: {e}")
+            return {"message": f"Error al procesar los datos: {str(e)}"}, 500
 
 def admin_prospects_post():  # noqa: E501
     """
@@ -50,16 +50,16 @@ def admin_prospects_post():  # noqa: E501
             prospect_data = data.get("prospect")
 
             if not user_data or not prospect_data:
-                return {"message": "User and prospect data are required."}, 400
+                return {"message": "El usuario y el prospecto es requerido"}, 400
 
             response, status = prospect_repository.create_prospect(user_data, prospect_data)
             return jsonify(response), status
 
         except Exception as e:
             logging.error(f"Error processing request: {e}")
-            return {"message": f"Error processing request: {str(e)}"}, 500
+            return {"message": f"Error al procesar la respuesta: {str(e)}"}, 500
     else:
-        return {"message": "Request body must be JSON."}, 400
+        return {"message": "El formato de la solicitud debe estar en formato JSON."}, 400
 
 def admin_prospects_sales_advisor_advisor_id_get(advisor_id):  # noqa: E501
     return prospect_repository.get_prospects_by_sales_advisor_id(advisor_id)

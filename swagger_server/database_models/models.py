@@ -171,7 +171,7 @@ class Prospection(Base):
     id_prospect = Column(Integer, ForeignKey('prospect.id'), nullable=False)
     date = Column(DateTime, nullable=False)
     state = Column(Integer, nullable=False)
-    channel = Column(String(255), nullable=True)  # Agregamos la columna channel
+    channel = Column(String(50), nullable=True)
 
     prospect = relationship("Prospect", back_populates="prospections")
     academic_program = relationship("AcademicProgram")

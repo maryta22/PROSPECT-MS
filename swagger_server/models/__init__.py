@@ -6,7 +6,9 @@ from __future__ import absolute_import
 from swagger_server.models.city import City
 from swagger_server.models.email import Email
 from swagger_server.models.history_log import HistoryLog
+from swagger_server.models.id_days_body import IdDaysBody
 from swagger_server.models.id_stateprospections_body import IdStateprospectionsBody
+from swagger_server.models.inline_response200 import InlineResponse200
 from swagger_server.models.note import Note
 from swagger_server.models.note_request import NoteRequest
 from swagger_server.models.prospect_request import ProspectRequest

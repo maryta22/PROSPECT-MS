@@ -90,8 +90,6 @@ class ProspectionRepository:
 
             # Si se proporciona un ID de vendedor, asociarlo a la prospección
             sales_advisor_id = prospection_data.get("sales_advisor_id")
-            print(sales_advisor_id)
-            print(sales_advisor_id)
             if sales_advisor_id:
                 prospection_sales_advisor = ProspectionSalesAdvisor(
                     id_prospection=new_prospection.id,

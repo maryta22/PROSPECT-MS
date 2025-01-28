@@ -21,8 +21,10 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 # Copiar el código de la aplicación
 COPY . /usr/src/app
 
-# Exponer el puerto 8080
+# Exponer el puerto 2034
 EXPOSE 2034
 
+
 # Configurar Gunicorn como servidor de aplicaciones
-CMD ["gunicorn", "-b", "0.0.0.0:2034", "swagger_server.__main__:app", "--workers", "3", "--threads", "2"]
+CMD ["gunicorn", "--workers=1", "--bind", "0.0.0.0:2034", "swagger_server.__main__:app"]
+

@@ -319,7 +319,7 @@ class City(Base):
     __tablename__ = 'city'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(255), nullable=False)
+    name = Column(String(50), nullable=False)
 
     prospects = relationship("Prospect", back_populates="city")
 
@@ -327,4 +327,40 @@ class City(Base):
         return {
             "id": self.id,
             "name": self.name
+        }
+
+class Alert(Base):
+    __tablename__ = 'alert'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    message = Column(String(200), nullable=False)
+    days = Column(Integer, nullable=False)
+    state = Column(Integer, nullable=False)
+
+    alert_states = relationship("AlertStateProspection", back_populates="alert")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "message": self.message,
+            "days": self.days,
+            "state": self.state
+        }
+
+class AlertStateProspection(Base):
+    __tablename__ = 'alert_state_prospection'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    id_alert = Column(Integer, ForeignKey('alert.id'), nullable=False)
+    id_state_prospection = Column(Integer, nullable=False)
+    state = Column(Integer, nullable=False)
+
+    alert = relationship("Alert", back_populates="alert_states")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "id_alert": self.id_alert,
+            "id_state_prospection": self.id_state_prospection,
+            "state": self.state
         }

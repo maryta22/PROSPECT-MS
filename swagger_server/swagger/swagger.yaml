@@ -4,7 +4,7 @@ info:
   description: "Api para gestionar prospectos, prospecciones y diccionarios"
   version: 1.0.0
 servers:
-- url: http://localhost:8081
+- url: http://localhost:2034
   description: Local server
 paths:
   /admin/prospects:
@@ -730,6 +730,63 @@ paths:
         "500":
           description: Server error
       x-openapi-router-controller: swagger_server.controllers.city_controller
+  /alerts/{id}/days:
+    get:
+      tags:
+      - Alerts
+      summary: Retrieve the days value for a specific alert
+      operationId: get_alert_days
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          description: The ID of the alert
+      responses:
+        "200":
+          description: Days value retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "404":
+          description: Alert not found
+        "500":
+          description: Server error
+      x-openapi-router-controller: swagger_server.controllers.alerts_controller
+    patch:
+      tags:
+      - Alerts
+      summary: Update the days value for a specific alert
+      operationId: update_alert_days
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          description: The ID of the alert
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/id_days_body'
+        required: true
+      responses:
+        "200":
+          description: Days value updated successfully
+        "400":
+          description: Invalid input
+        "404":
+          description: Alert not found
+        "500":
+          description: Server error
+      x-openapi-router-controller: swagger_server.controllers.alerts_controller
 components:
   schemas:
     ProspectRequest:
@@ -1003,4 +1060,20 @@ components:
       example:
         id: 1
         name: Quito
+    inline_response_200:
+      type: object
+      properties:
+        days:
+          type: integer
+          description: Number of days for the alert
+      example:
+        days: 0
+    id_days_body:
+      required:
+      - days
+      type: object
+      properties:
+        days:
+          type: integer
+          description: New number of days for the alert
 

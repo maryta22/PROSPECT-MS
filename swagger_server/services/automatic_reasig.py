@@ -59,7 +59,7 @@ class AutomaticReasig:
             min_prospections = min(sales_advisor_prospections.values())
 
             # 3. Seleccionar aleatoriamente entre los vendedores con el menor número de prospecciones
-            candidates = [advisor_id for advisor_id, count in sales_advisor_prospections.items() if count == min_prospections]
+            candidates = [advisor_id for advisor_id, count in sales_advisor_prospections.items() if count == count]
             selected_advisor_id = random.choice(candidates)
 
             logging.info(f"Selected Sales Advisor ID: {selected_advisor_id}")

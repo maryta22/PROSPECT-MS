@@ -42,8 +42,8 @@ To run the server on a Docker container, please execute the following from the r
 
 ```bash
 # building the image
-docker build -t prospect-ms .
+docker build -t prospect .
 
 # starting up a container
-docker run -p 2034:2034 prospect-ms
+docker run -p 2034:2034 prospect
 ```

@@ -163,7 +163,6 @@ class ProspectionRepository:
     def get_prospections_by_prospect_id(self, prospect_id):
         session = self.Session()
         try:
-            # Realizar la consulta para obtener las prospecciones activas y asignadas a vendedores activos
             prospections = session.query(
                 Prospection.id.label("id"),
                 Prospection.date.label("date"),
